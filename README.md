@@ -1,6 +1,6 @@
 # streamvr-overlay
 
-XSOverlayが有料なのを見てこれくらいなら作れんじゃねと思った
+XSOverlayが有料なのを見てこれくらいなら作れんじゃねと思った  
 絶賛開発中
 
 # 謝辞
