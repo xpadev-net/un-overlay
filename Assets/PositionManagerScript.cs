@@ -23,9 +23,13 @@ public class PositionManagerScript : MonoBehaviour {
     [SerializeField]
     private EasyOpenVROverlayForUnity easyOpenVROverlay; //オーバーレイ表示用ライブラリ
     [SerializeField]
-    private RectTransform leftCursorTextRectTransform; //左手カーソル表示用Text
+    private GameObject leftCursorText; //左手カーソル表示用Text
+
+    private RectTransform leftCursorTextRectTransform;
     [SerializeField]
-    private RectTransform rightCursorTextRectTransform; //右手カーソル表示用Text
+    private GameObject rightCursorText; //右手カーソル表示用Text
+
+    private RectTransform rightCursorTextRectTransform;
     [SerializeField]
     private RectTransform canvasRectTransform; //全体サイズ計算用Canvas位置情報
 
@@ -44,7 +48,9 @@ public class PositionManagerScript : MonoBehaviour {
     private void Start () {
         //姿勢取得ライブラリを初期化
         util.Init();
-   }
+        leftCursorTextRectTransform = leftCursorText.GetComponent<RectTransform>();
+        rightCursorTextRectTransform = rightCursorText.GetComponent<RectTransform>();
+    }
 
     private void Update () {
         //姿勢取得ライブラリが初期化されていないとき初期化する
@@ -80,6 +86,9 @@ public class PositionManagerScript : MonoBehaviour {
         //オーバーレイライブラリの座標サイズ(RenderTexture依存)と
         //Canvasの幅・高さが一致する必要がある。
         var sizeDelta = canvasRectTransform.sizeDelta;
+        
+        leftCursorText.SetActive(easyOpenVROverlay.LeftHandU > -1f);
+        rightCursorText.SetActive(easyOpenVROverlay.RightHandU > -1f);
         leftCursorTextRectTransform.anchoredPosition = new Vector2(easyOpenVROverlay.LeftHandU - sizeDelta.x / 2f, easyOpenVROverlay.LeftHandV - sizeDelta.y / 2f);
         rightCursorTextRectTransform.anchoredPosition = new Vector2(easyOpenVROverlay.RightHandU - sizeDelta.x / 2f, easyOpenVROverlay.RightHandV - sizeDelta.y / 2f);
     }
