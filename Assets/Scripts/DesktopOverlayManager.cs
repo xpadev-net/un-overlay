@@ -4,7 +4,7 @@ using uWindowCapture;
 
 public class DesktopOverlayManager : MonoBehaviour
 {
-    public int desktopIndex = 0;
+    public int desktopIndex = -1;
     private GameObject desktopCapture;
     private Transform desktopCaptureTransform;
     private GameObject canvas;
@@ -50,13 +50,17 @@ public class DesktopOverlayManager : MonoBehaviour
     {
         if (!initialized)
         {
-            if (!windowTexture||windowTexture.window==null)
+            if (!windowTexture||windowTexture.window==null||desktopIndex<0)
+            {
+                return;
+            }
+            windowWidth = windowTexture.window.width;
+            windowHeight = windowTexture.window.height;
+            if (windowHeight + windowWidth < 1)
             {
                 return;
             }
             initialized = true;
-            windowWidth = windowTexture.window.width;
-            windowHeight = windowTexture.window.height;
             desktopCaptureTransform.localScale = new Vector3(windowWidth, windowHeight);
             targetTexture = new RenderTexture(windowWidth,windowHeight,32);
             overlayCamera.targetTexture = targetTexture;
