@@ -7,10 +7,7 @@
  * http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using UnityEngine;
 using Valve.VR;
@@ -453,6 +450,16 @@ namespace EasyLazyLibrary
             }
             ulButtonPressed = state.ulButtonPressed;
             return true;
+        }
+        
+        public bool IsControllerButtonPressed(uint index, EVRButtonId keyId)
+        {
+            if (!GetControllerState(index, out var state))
+            {
+                return false;
+            }
+
+            return (state.ulButtonPressed & 1ul << (int)keyId) != 0;
         }
 
         public bool GetControllerState(uint index, out VRControllerState_t state)
