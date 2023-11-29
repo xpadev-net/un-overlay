@@ -202,6 +202,8 @@ namespace EasyLazyLibrary
         //無効なハンドル
         private const ulong INVALID_HANDLE = 0;
 
+        private bool initialized = false;
+
         //--------------------------------------------------------------------------
 
         //外部から透明度設定切り替え
@@ -307,12 +309,18 @@ namespace EasyLazyLibrary
         //初期化処理
         private void Start()
         {
+            initialized = false;
+        }
 
+        public void Init()
+        {
+            
 #pragma warning disable 0219
             string Tag = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
             Debug.Log(Tag + "Begin");
+            initialized = true;
 
             var openVRError = EVRInitError.None;
             var overlayError = EVROverlayError.None;
@@ -372,10 +380,11 @@ namespace EasyLazyLibrary
 
             Debug.Log(Tag + "初期化完了しました");
         }
-
+        
         private void Update()
         {
 
+            if (!initialized) return;
 #pragma warning disable 0219
             string Tag = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得

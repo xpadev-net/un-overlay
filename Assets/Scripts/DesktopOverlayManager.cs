@@ -30,7 +30,7 @@ public class DesktopOverlayManager : MonoBehaviour
     
     void Start()
     {
-        overlayId = "dev.xpa.steamvr-overlay."+Uuid.GetUuid();
+        overlayId = Const.overlayKeyPrefix+"."+Uuid.GetUuid();
         initialized = false;
         desktopCapture = transform.Find("DesktopCapture").gameObject;
         windowTexture = desktopCapture.GetComponent<UwcWindowTexture>();
@@ -43,6 +43,7 @@ public class DesktopOverlayManager : MonoBehaviour
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
         easyOverlay.OverlayKeyName = overlayId;
         easyOverlay.OverlayFriendlyName = overlayId;
+        easyOverlay.Init();
     }
 
     // Update is called once per frame
@@ -67,6 +68,7 @@ public class DesktopOverlayManager : MonoBehaviour
             easyOverlay.renderTexture = targetTexture;
             canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
             windowTexture.desktopIndex = desktopIndex;
+            transform.position = new Vector3(WindowControl.instance.GetWindowLeft(windowWidth), 0, 0);
         }
 
         if (windowTexture.desktopIndex != desktopIndex)

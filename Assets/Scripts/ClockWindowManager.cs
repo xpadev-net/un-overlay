@@ -19,7 +19,7 @@ using UnityEngine;
 using EasyLazyLibrary;
 using Valve.VR;
 
-public class PositionManagerScript : MonoBehaviour {
+public class ClockWindowManager : MonoBehaviour {
     [SerializeField]
     private EasyOpenVROverlayForUnity easyOpenVROverlay; //オーバーレイ表示用ライブラリ
     [SerializeField]
@@ -44,6 +44,8 @@ public class PositionManagerScript : MonoBehaviour {
     private bool positionInitialize = true; //位置を初期化するフラグ(完了するとfalseになる)
     
     private Vector3 screenOffsetTransform;
+    private Quaternion screenOffsetRotation;
+    private bool isLeftHand = true;
     
     private void Start () {
         //姿勢取得ライブラリを初期化
@@ -68,14 +70,12 @@ public class PositionManagerScript : MonoBehaviour {
             //(サンプル用。より適切なタイミングで呼び直してください。
             // OpenVRが初期化されていない状態では原点になってしまいます)
             InitPosition();
-
             //初期位置初期化処理を停止
             positionInitialize = false;
         }
 
         UpdateCursorPos();
         HandleInput();
-        MoveScreen();
     }
 
     private void UpdateCursorPos()
@@ -87,71 +87,28 @@ public class PositionManagerScript : MonoBehaviour {
         //Canvasの幅・高さが一致する必要がある。
         var sizeDelta = canvasRectTransform.sizeDelta;
         
-        leftCursorText.SetActive(easyOpenVROverlay.LeftHandU > -1f);
-        rightCursorText.SetActive(easyOpenVROverlay.RightHandU > -1f);
+        leftCursorText.SetActive(easyOpenVROverlay.LeftHandU > -1f && !isLeftHand);
+        rightCursorText.SetActive(easyOpenVROverlay.RightHandU > -1f && isLeftHand);
         leftCursorTextRectTransform.anchoredPosition = new Vector2(easyOpenVROverlay.LeftHandU - sizeDelta.x / 2f, easyOpenVROverlay.LeftHandV - sizeDelta.y / 2f);
         rightCursorTextRectTransform.anchoredPosition = new Vector2(easyOpenVROverlay.RightHandU - sizeDelta.x / 2f, easyOpenVROverlay.RightHandV - sizeDelta.y / 2f);
     }
-
-    private void MoveScreen()
-    {
-        //移動モード処理
-        if (!isScreenMoving) return;
-        //ボタンが一切押されなくなったならば移動モードから抜ける
-        if ((!screenMoveWithRight &&
-             !util.IsControllerButtonPressed(util.GetLeftControllerIndex(), EVRButtonId.k_EButton_Grip)) ||
-            (screenMoveWithRight &&
-             !util.IsControllerButtonPressed(util.GetRightControllerIndex(), EVRButtonId.k_EButton_Grip)))
-        {
-            isScreenMoving = false;
-            return;
-        }
-        var pos = util.GetHMDTransform(); //HMDが有効か調べる
-        var cpos = screenMoveWithRight ? util.GetRightControllerTransform():util.GetLeftControllerTransform(); //任意の手の姿勢情報
-        //HMDも取得したコントローラ姿勢も有効ならば
-        if (pos == null || cpos == null) return;
-        //コントローラの姿勢クォータニオンを45度傾けて、オイラー角に変換(しないと意図しない向きになってしまう)
-        var rotate = cpos.rotation * Quaternion.AngleAxis(45, Vector3.right);
-        var ang = rotate.eulerAngles;
-
-        //コントローラの位置をそのままOverlayの位置に反映
-        easyOpenVROverlay.Position = cpos.position - rotate * screenOffsetTransform;; //これが難しい...
-
-        //コントローラの回転を適時反転させてOverlayの回転に反映(こちら向きにする)
-        easyOpenVROverlay.Rotation = new Vector3(-ang.x, -ang.y, ang.z);
-    }
-
+    
     //コントローラによる画面移動モードにはいる
     private void HandleInput()
     {
-        if (easyOpenVROverlay.LeftHandU > -1f)
+        if (easyOpenVROverlay.LeftHandU > -1f && !isLeftHand)
         {
             if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetLeftControllerIndex(), EVRButtonId.k_EButton_Grip))
             {
-                isScreenMoving = true;
-                screenMoveWithRight = false;
-                
-                var cpos = util.GetLeftControllerTransform();
-                UpdateOffset(cpos);
             }
             return;
         }
-        if (easyOpenVROverlay.RightHandU > -1f)
+        if (easyOpenVROverlay.RightHandU > -1f && isLeftHand)
         {
             if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetRightControllerIndex(), EVRButtonId.k_EButton_Grip))
             {
-                isScreenMoving = true;
-                screenMoveWithRight = true;
-                var cpos = util.GetLeftControllerTransform();
-                UpdateOffset(cpos);
             }
         }
-    }
-
-    private void UpdateOffset(EasyOpenVRUtil.Transform baseTransform)
-    {
-        var rotate = Quaternion.Inverse(baseTransform.rotation * Quaternion.AngleAxis(45, Vector3.right));
-        screenOffsetTransform = rotate * (baseTransform.position - easyOpenVROverlay.Position);
     }
 
     //HMDの位置を基準に操作しやすい位置に画面を出す
@@ -166,11 +123,10 @@ public class PositionManagerScript : MonoBehaviour {
             return; //更新しない
         }
 
-        //HMDの位置に、基準位置とHMD角度を加算したものを、表示位置とする(でないと明後日の方向に移動するため)
-        easyOpenVROverlay.Position = pos.position + pos.rotation * overlayPosition;
-
-        //HMDの角度を一部反転したものに、基準角度を加算したものを、表示角度とする
-        easyOpenVROverlay.Rotation = (new Vector3(-pos.rotation.eulerAngles.x, -pos.rotation.eulerAngles.y, 0)) + overlayRotation;
+        easyOpenVROverlay.DeviceTracking = true;
+        easyOpenVROverlay.DeviceIndex = isLeftHand? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController:EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
+        easyOpenVROverlay.Position = new Vector3(-0.05f, 0, -0.1f);
+        easyOpenVROverlay.Rotation = new Vector3(190, 90, 0);
 
     }
 }
