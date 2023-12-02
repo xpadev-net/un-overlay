@@ -742,28 +742,16 @@ namespace EasyLazyLibrary
         //device情報を取得する
         private string GetProperty(uint idx, ETrackedDeviceProperty prop)
         {
+            var propertyError = new ETrackedPropertyError();
+            var size = openvr.GetStringTrackedDeviceProperty(idx, prop, null, 0, ref propertyError);
+            if (propertyError != ETrackedPropertyError.TrackedProp_BufferTooSmall) return null;
 
-#pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-#pragma warning restore 0219
-
-            ETrackedPropertyError error = new ETrackedPropertyError();
-            //device情報を取得するのに必要な文字数を取得
-            uint size = openvr.GetStringTrackedDeviceProperty(idx, prop, null, 0, ref error);
-            if (error != ETrackedPropertyError.TrackedProp_BufferTooSmall)
+            var s = new StringBuilder
             {
-                return null;
-            }
-
-            StringBuilder s = new StringBuilder();
-            s.Length = (int)size; //文字長さ確保
-            //device情報を取得する
-            openvr.GetStringTrackedDeviceProperty(idx, prop, s, size, ref error);
-            if (error != ETrackedPropertyError.TrackedProp_Success)
-            {
-                return null;
-            }
+                Length = (int)size
+            };
+            openvr.GetStringTrackedDeviceProperty(idx, prop, s, size, ref propertyError);
+            if (propertyError != ETrackedPropertyError.TrackedProp_Success) return null;
 
             return s.ToString();
         }
@@ -822,37 +810,25 @@ namespace EasyLazyLibrary
         //指定されたdeviceが有効かチェックした上で、オーバーレイと交点を持つかチェック
         private bool CheckRay(uint idx, TrackedDevicePose_t[] allDevicePose, ref VROverlayIntersectionResults_t results)
         {
-
             //device indexが有効
-            if (idx != OpenVR.k_unTrackedDeviceIndexInvalid)
-            {
-                //接続されていて姿勢情報が有効
-                if (allDevicePose[idx].bDeviceIsConnected && allDevicePose[idx].bPoseIsValid)
-                {
-                    //姿勢情報などを変換してもらう
-                    TrackedDevicePose_t Pose = allDevicePose[idx];
-                    SteamVR_Utils.RigidTransform Trans =
-                        new SteamVR_Utils.RigidTransform(Pose.mDeviceToAbsoluteTracking);
+            if (idx == OpenVR.k_unTrackedDeviceIndexInvalid) return false;
+            //接続されていて姿勢情報が有効
+            if (!allDevicePose[idx].bDeviceIsConnected || !allDevicePose[idx].bPoseIsValid) return false;
+            //姿勢情報などを変換してもらう
+            var post = allDevicePose[idx];
+            var rigidTransform =
+                new SteamVR_Utils.RigidTransform(post.mDeviceToAbsoluteTracking);
 
-                    //コントローラー用に45度前方に傾けた方向ベクトルを計算
-                    Vector3 vect = (Trans.rot * Quaternion.AngleAxis(45, Vector3.right)) * Vector3.forward;
+            //コントローラー用に45度前方に傾けた方向ベクトルを計算
+            var rotation = (rigidTransform.rot * Quaternion.AngleAxis(45, Vector3.right)) * Vector3.forward;
 
-                    return ComputeOverlayIntersection(Trans.pos, vect, ref results);
-                }
-            }
-
-            return false;
+            return ComputeOverlayIntersection(rigidTransform.pos, rotation, ref results);
         }
 
         //オーバーレイと交点を持つかチェック
-        private bool ComputeOverlayIntersection(Vector3 pos, Vector3 rotvect,
+        private bool ComputeOverlayIntersection(Vector3 pos, Vector3 rotation,
             ref VROverlayIntersectionResults_t results)
         {
-
-#pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-#pragma warning restore 0219
 
             //レイ照射情報
             VROverlayIntersectionParams_t param = new VROverlayIntersectionParams_t();
@@ -866,9 +842,9 @@ namespace EasyLazyLibrary
             //レイ発射単位方向ベクトル
             param.vDirection = new HmdVector3_t
             {
-                v0 = rotvect.x,
-                v1 = rotvect.y,
-                v2 = -rotvect.z //右手系 to 左手系
+                v0 = rotation.x,
+                v1 = rotation.y,
+                v2 = -rotation.z //右手系 to 左手系
             };
             //ルーム空間座標系で照射
             param.eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding;
@@ -880,49 +856,30 @@ namespace EasyLazyLibrary
         //タップされているかどうかを調べる
         private void CollisionHaptic(VROverlayIntersectionResults_t results, LeftOrRight lr, ref bool tapped)
         {
-
-            // string Tag = "[" + this.GetType().Name + ":" + System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-            // Debug.Log(Tag);
-            //コントローラとオーバーレイの距離が一定以下なら
-            if (results.fDistance < TapOnDistance && !tapped)
+            switch (results.fDistance)
             {
-                //タップされた
-                tapped = true;
-                haptic(lr);
-            }
-
-            //コントローラとオーバーレイの距離が一定以上なら
-            if (results.fDistance > TapOffDistance && tapped)
-            {
-                //離れた
-                tapped = false;
-                haptic(lr);
+                //コントローラとオーバーレイの距離が一定以下なら
+                case < TapOnDistance when !tapped:
+                    //タップされた
+                    tapped = true;
+                    Haptic(lr);
+                    break;
+                case > TapOffDistance when tapped:
+                    //離れた
+                    tapped = false;
+                    Haptic(lr);
+                    break;
             }
         }
 
         //振動フィードバックを行う
-        private void haptic(LeftOrRight lr)
+        private void Haptic(LeftOrRight lr)
         {
-
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-            //Debug.Log(Tag);
-
-            //左手コントローラーが有効かチェック
-            uint Leftidx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
-            if (Leftidx != OpenVR.k_unTrackedDeviceIndexInvalid && lr == LeftOrRight.Left)
-            {
-                //ぶるっと
-                openvr.TriggerHapticPulse(Leftidx, 0, 3000);
-            }
-
-            //右手コントローラーが有効かチェック
-            uint Rightidx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
-            if (Rightidx != OpenVR.k_unTrackedDeviceIndexInvalid && lr == LeftOrRight.Right)
-            {
-                //ぶるっと
-                openvr.TriggerHapticPulse(Rightidx, 0, 3000);
-            }
+            var index = openvr.GetTrackedDeviceIndexForControllerRole(lr == LeftOrRight.Left
+                ? ETrackedControllerRole.LeftHand
+                : ETrackedControllerRole.RightHand);
+            if (index == OpenVR.k_unTrackedDeviceIndexInvalid) return;
+            openvr.TriggerHapticPulse(index, 0, 3000);
         }
     }
 }
