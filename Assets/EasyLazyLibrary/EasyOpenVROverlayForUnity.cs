@@ -255,10 +255,10 @@ namespace EasyLazyLibrary
         {
 
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
+            string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
-            Debug.Log(Tag + "Begin");
+            Debug.Log(currentMethod + "Begin");
 
             //ハンドルを解放
             if (overlayHandle != INVALID_HANDLE && overlay != null)
@@ -277,10 +277,10 @@ namespace EasyLazyLibrary
         {
 
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
+            string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
-            Debug.Log(Tag + "Begin");
+            Debug.Log(currentMethod + "Begin");
 
             //ハンドル類の全開放
             ProcessError();
@@ -291,10 +291,10 @@ namespace EasyLazyLibrary
         {
 
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
+            string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
-            Debug.Log(Tag + "Begin");
+            Debug.Log(currentMethod + "Begin");
 
             //ハンドル類の全開放
             ProcessError();
@@ -322,35 +322,34 @@ namespace EasyLazyLibrary
         {
             
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
+            string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
-            Debug.Log(Tag + "Begin");
+            Debug.Log(currentMethod + "Begin");
             initialized = true;
 
-            var openVRError = EVRInitError.None;
-            var overlayError = EVROverlayError.None;
             error = false;
 
             //フレームレートを90fpsにする。(しないと無限に早くなることがある)
             Application.targetFrameRate = 90;
-            Debug.Log(Tag + "Set Frame Rate 90");
+            Debug.Log(currentMethod + "Set Frame Rate 90");
 
             //OpenVRの初期化
+            var openVRError = EVRInitError.None;
             openvr = OpenVR.Init(ref openVRError, EVRApplicationType.VRApplication_Overlay);
             if (openVRError != EVRInitError.None)
             {
-                Debug.LogError(Tag + "OpenVRの初期化に失敗." + openVRError.ToString());
+                Debug.LogError(currentMethod + "OpenVRの初期化に失敗." + openVRError.ToString());
                 ProcessError();
                 return;
             }
 
             //オーバーレイ機能の初期化
             overlay = OpenVR.Overlay;
-            overlayError = overlay.CreateOverlay(OverlayKeyName, OverlayFriendlyName, ref overlayHandle);
+            var overlayError = overlay.CreateOverlay(OverlayKeyName, OverlayFriendlyName, ref overlayHandle);
             if (overlayError != EVROverlayError.None)
             {
-                Debug.LogError(Tag + "Overlayの初期化に失敗. " + overlayError.ToString());
+                Debug.LogError(currentMethod + "Overlayの初期化に失敗. " + overlayError.ToString());
                 ProcessError();
                 return;
             }
@@ -384,7 +383,7 @@ namespace EasyLazyLibrary
             //--------
             //showDevices();
 
-            Debug.Log(Tag + "初期化完了しました");
+            Debug.Log(currentMethod + "初期化完了しました");
         }
         
         private void Update()
@@ -392,7 +391,7 @@ namespace EasyLazyLibrary
 
             if (!initialized) return;
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
+            string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
@@ -416,7 +415,7 @@ namespace EasyLazyLibrary
             //イベントを処理する(終了された時true)
             if (ProcessEvent())
             {
-                Debug.Log(Tag + "VRシステムが終了されました");
+                Debug.Log(currentMethod + "VRシステムが終了されました");
                 ApplicationQuit();
             }
 
@@ -424,9 +423,9 @@ namespace EasyLazyLibrary
             if (overlay.IsOverlayVisible(overlayHandle))
             {
                 //位置情報と各種設定の更新
-                updatePosition();
+                UpdatePosition();
                 //表示情報の更新
-                updateTexture();
+                UpdateTexture();
 
                 //Canvasが設定されている場合
                 if (laycastRootObject != null)
@@ -444,18 +443,18 @@ namespace EasyLazyLibrary
         }
 
         //位置情報を更新
-        private void updatePosition()
+        private void UpdatePosition()
         {
 
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
+            string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
             //RenderTextureが生成されているかチェック
             if (!renderTexture.IsCreated())
             {
-                Debug.Log(Tag + "RenderTextureがまだ生成されていない");
+                Debug.Log(currentMethod + "RenderTextureがまだ生成されていない");
                 return;
             }
 
@@ -505,7 +504,7 @@ namespace EasyLazyLibrary
                 //device情報に変化があったらInspectorに反映
                 if (DeviceIndexOld != (int)idx)
                 {
-                    Debug.Log(Tag + "Device Updated");
+                    Debug.Log(currentMethod + "Device Updated");
                     UpdateDeviceInfo(idx);
                     DeviceIndexOld = (int)idx;
                 }
@@ -552,7 +551,7 @@ namespace EasyLazyLibrary
             }
             catch (UnassignedReferenceException e)
             {
-                Debug.LogError(Tag + "RenderTextureがセットされていません " + e.ToString());
+                Debug.LogError(currentMethod + "RenderTextureがセットされていません " + e.ToString());
                 ProcessError();
                 return;
             }
@@ -560,12 +559,12 @@ namespace EasyLazyLibrary
         }
 
         //表示情報を更新
-        private void updateTexture()
+        private void UpdateTexture()
         {
 
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
+            string currentMethod = "[" + this.GetType().Name + ":" +
+                                   System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
             overlay.SetOverlayFlag(overlayHandle, VROverlayFlags.SideBySide_Parallel, SideBySide);
@@ -573,7 +572,7 @@ namespace EasyLazyLibrary
             //RenderTextureが生成されているかチェック
             if (!renderTexture.IsCreated())
             {
-                Debug.Log(Tag + "RenderTextureがまだ生成されていない");
+                Debug.Log(currentMethod + "RenderTextureがまだ生成されていない");
                 return;
             }
 
@@ -584,7 +583,7 @@ namespace EasyLazyLibrary
             }
             catch (UnassignedReferenceException e)
             {
-                Debug.LogError(Tag + "RenderTextureがセットされていません " + e.ToString());
+                Debug.LogError(currentMethod + "RenderTextureがセットされていません " + e.ToString());
                 ProcessError();
                 return;
             }
@@ -594,11 +593,10 @@ namespace EasyLazyLibrary
             overlayError = overlay.SetOverlayTexture(overlayHandle, ref overlayTexture);
             if (overlayError != EVROverlayError.None)
             {
-                Debug.LogError(Tag + "Overlayにテクスチャをセットできませんでした. " + overlayError.ToString());
+                Debug.LogError(currentMethod + "Overlayにテクスチャをセットできませんでした. " + overlayError.ToString());
                 //致命的なエラーとしない
                 return;
             }
-
         }
 
         //終了イベントをキャッチした時に戻す
@@ -606,29 +604,29 @@ namespace EasyLazyLibrary
         {
 
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
+            string currentMethod = "[" + this.GetType().Name + ":" +
+                                   System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
             //イベント構造体のサイズを取得
             uint uncbVREvent = (uint)System.Runtime.InteropServices.Marshal.SizeOf(typeof(VREvent_t));
 
             //イベント情報格納構造体
-            VREvent_t Event = new VREvent_t();
+            VREvent_t vrEvent = new VREvent_t();
             //イベントを取り出す
-            while (overlay.PollNextOverlayEvent(overlayHandle, ref Event, uncbVREvent))
+            while (overlay.PollNextOverlayEvent(overlayHandle, ref vrEvent, uncbVREvent))
             {
                 //イベントのログを表示
                 if (eventLog)
                 {
-                    Debug.Log(Tag + "Event:" + ((EVREventType)Event.eventType).ToString());
+                    Debug.Log(currentMethod + "Event:" + ((EVREventType)vrEvent.eventType).ToString());
                 }
 
                 //イベント情報で分岐
-                switch ((EVREventType)Event.eventType)
+                switch ((EVREventType)vrEvent.eventType)
                 {
                     case EVREventType.VREvent_Quit:
-                        Debug.Log(Tag + "Quit");
+                        Debug.Log(currentMethod + "Quit");
                         return true;
                 }
             }
@@ -642,13 +640,8 @@ namespace EasyLazyLibrary
         //全てのdeviceの情報をログに出力する
         private void showDevices()
         {
-#pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-#pragma warning restore 0219
-
             //すべてのdeviceの接続状態を取得
-            TrackedDevicePose_t[] allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+            var allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             openvr.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0f, allDevicePose);
 
             //接続されているdeviceの数をカウントする
@@ -680,30 +673,30 @@ namespace EasyLazyLibrary
         }
 
         //deviceの情報をログに出力する(1項目)
-        private bool GetPropertyAndPutLog(uint idx, TrackedDevicePose_t[] allDevicePose)
+        private bool GetPropertyAndPutLog(uint index, TrackedDevicePose_t[] allDevicePose)
         {
 #pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
+            var currentMethod = "[" + this.GetType().Name + ":" +
+                                System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
             //接続されているかをチェック
-            if (allDevicePose[idx].bDeviceIsConnected)
+            if (allDevicePose[index].bDeviceIsConnected)
             {
                 //接続されているdevice
 
                 //デバイスシリアル番号(Trackerの識別によく使う)と、deviceモデル名(device種類)を取得
-                string s1 = GetProperty(idx, ETrackedDeviceProperty.Prop_SerialNumber_String);
-                string s2 = GetProperty(idx, ETrackedDeviceProperty.Prop_RenderModelName_String);
-                if (s1 != null && s2 != null)
+                var serial = GetProperty(index, ETrackedDeviceProperty.Prop_SerialNumber_String);
+                var modelNumber = GetProperty(index, ETrackedDeviceProperty.Prop_RenderModelName_String);
+                if (serial != null && modelNumber != null)
                 {
                     //ログに表示
-                    Debug.Log(Tag + "Device " + idx + ":" + s1 + " : " + s2);
+                    Debug.Log(currentMethod + "Device " + index + ":" + serial + " : " + modelNumber);
                 }
                 else
                 {
                     //何らかの理由で取得失敗した
-                    Debug.Log(Tag + "Device " + idx + ": Error");
+                    Debug.Log(currentMethod + "Device " + index + ": Error");
                 }
 
                 return true;
@@ -711,7 +704,7 @@ namespace EasyLazyLibrary
             else
             {
                 //接続されていないdevice
-                Debug.Log(Tag + "Device " + idx + ": Not connected");
+                Debug.Log(currentMethod + "Device " + index + ": Not connected");
                 return false;
             }
         }
@@ -720,7 +713,7 @@ namespace EasyLazyLibrary
         private void UpdateDeviceInfo(uint idx)
         {
             //すべてのdeviceの接続状態を取得
-            TrackedDevicePose_t[] allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+            var allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             openvr.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0f, allDevicePose);
 
             //接続されているdeviceの数をカウントする
