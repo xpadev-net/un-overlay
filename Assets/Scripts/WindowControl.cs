@@ -1,10 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using EasyLazyLibrary;
 using UnityEngine;
+
+public struct WindowItem
+{
+    public EasyOpenVROverlayForUnity easyOverlay;
+    
+    public delegate void OnCloseCallback();
+    public OnCloseCallback onClose;
+
+    public string overlayId;
+    public WindowItem(EasyOpenVROverlayForUnity easyOverlay, string overlayId, OnCloseCallback onClose)
+    {
+        this.easyOverlay = easyOverlay;
+        this.overlayId = overlayId;
+        this.onClose = onClose;
+    }
+}
 
 public class WindowControl : MonoBehaviour {
     public static WindowControl instance;
     
-    private List<BaseWindowManager> managers;
+    private List<WindowItem> managers;
     private bool isHoldingWindow;
     private int posLeft;
     private void Awake() {
@@ -17,15 +35,15 @@ public class WindowControl : MonoBehaviour {
 
         posLeft = 0;
         isHoldingWindow = false;
-        managers = new List<BaseWindowManager>();
+        managers = new List<WindowItem>();
     }
 
-    public int RegisterWindow(BaseWindowManager self,int width)
+    public int RegisterWindow(Nullable<WindowItem> item,int width)
     {
-        if (self)
+        if (item.HasValue)
         {
-            managers.Add(self);
-            Debug.Log(self.overlayId);            
+            managers.Add(item.Value);
+            Debug.Log("[WindowControl]added!" +item.Value.overlayId);            
         }
         Debug.Log("added!" + posLeft);
         var result = posLeft;
@@ -46,9 +64,10 @@ public class WindowControl : MonoBehaviour {
 
     public void Reset()
     {
+        Debug.Log("[WindowControl]reset!" +managers.Count);
         foreach (var manager in managers)
         {
-            manager.Remove();
+            manager.onClose();
         }
         managers.Clear();
         posLeft = 0;

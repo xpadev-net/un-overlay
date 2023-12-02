@@ -62,8 +62,12 @@ public class DesktopOverlayManager : BaseWindowManager {
             easyOverlay.renderTexture = targetTexture;
             canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
             windowTexture.desktopIndex = desktopIndex;
+            var windowItem = new WindowItem(easyOverlay, overlayId, () =>
+            {
+                Remove();
+            });
             transform.position =
-                new Vector3(WindowControl.instance.RegisterWindow(this,windowWidth), 0, 0);
+                new Vector3(WindowControl.instance.RegisterWindow(windowItem,windowWidth), 0, 0);
             easyOverlay.Init();
             windowManager.Init();
             cameraAdjuster.UpdateCameraPov();
@@ -74,8 +78,8 @@ public class DesktopOverlayManager : BaseWindowManager {
         }
     }
     
-    public void Remove()
-    {
+    public new void Remove()
+    {   
         Destroy(gameObject);
     }
 }

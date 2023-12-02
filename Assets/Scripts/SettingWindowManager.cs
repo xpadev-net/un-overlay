@@ -48,14 +48,18 @@ public class SettingWindowManager : BaseWindowManager {
             overlayCamera.targetTexture = targetTexture;
             easyOverlay.renderTexture = targetTexture;
             canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
+            var windowItem = new WindowItem(easyOverlay, overlayId, () =>
+            {
+                Remove();
+            });
             transform.position =
-                new Vector3(WindowControl.instance.RegisterWindow(this,windowWidth), 0, 0);
+                new Vector3(WindowControl.instance.RegisterWindow(windowItem,windowWidth), 0, 0);
             easyOverlay.Init();
             cameraAdjuster.UpdateCameraPov();
         }
     }
     
-    private void CloseWindow()
+    public new void Remove()
     {
         Debug.Log("SettingOverlayManager CloseWindow");
         deleteCallback?.Invoke();
