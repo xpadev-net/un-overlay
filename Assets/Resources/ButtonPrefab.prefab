@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64774431dea0afa4884b4d749b81ec18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultBgColor: {r: 0, g: 0, b: 0, a: 0}
+  defaultBgColor: {r: 1, g: 1, b: 1, a: 0}
   hoverBgColor: {r: 1, g: 1, b: 1, a: 0.3137255}
   defaultOutlineColor: {r: 0, g: 0, b: 0, a: 0}
   hoverOutlineColor: {r: 0, g: 0, b: 0, a: 0}

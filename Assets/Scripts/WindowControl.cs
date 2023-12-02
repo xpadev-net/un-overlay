@@ -4,7 +4,7 @@ using UnityEngine;
 public class WindowControl : MonoBehaviour {
     public static WindowControl instance;
     
-    private List<DesktopOverlayManager> managers;
+    private List<BaseWindowManager> managers;
     private bool isHoldingWindow;
     private int posLeft;
     private void Awake() {
@@ -17,10 +17,10 @@ public class WindowControl : MonoBehaviour {
 
         posLeft = 0;
         isHoldingWindow = false;
-        managers = new List<DesktopOverlayManager>();
+        managers = new List<BaseWindowManager>();
     }
 
-    public int RegisterWindow(DesktopOverlayManager self,int width)
+    public int RegisterWindow(BaseWindowManager self,int width)
     {
         if (self)
         {

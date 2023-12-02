@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using uWindowCapture;
 
-public class DesktopOverlayManager : MonoBehaviour {
+public class DesktopOverlayManager : BaseWindowManager {
     public int desktopIndex = -1;
     [SerializeField]private GameObject desktopCapture;
     private Transform desktopCaptureTransform;
@@ -14,8 +14,6 @@ public class DesktopOverlayManager : MonoBehaviour {
     [SerializeField]private GameObject overlayCameraObj;
     private Camera overlayCamera;
     [SerializeField]private GameObject overlaySystem;
-    public EasyOpenVROverlayForUnity easyOverlay;
-    public string overlayId;
     private OverlayWindowManager windowManager;
     private CameraAdjuster cameraAdjuster;
 

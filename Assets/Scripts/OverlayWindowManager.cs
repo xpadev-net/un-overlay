@@ -39,8 +39,8 @@ public class OverlayWindowManager : MonoBehaviour {
         new Vector3(0.03f, -0.25f, 0.5f); // HMDの前方50cm、25cm下の位置に表示
     public Vector3 overlayRotation = new Vector3(-20f, 0, 0); // 操作しやすいよう-20°傾ける
 
-    private bool isScreenMoving;      // 画面を移動させようとしているか？
-    private bool isHoldingWithLeft; // それが右手で行われているか？
+    private bool isScreenMoving;
+    private bool isHoldingWithLeft;
 
     private bool positionInitialize = true; // 位置を初期化するフラグ(完了するとfalseになる)
 

@@ -16,10 +16,12 @@ public class UIControlManager : MonoBehaviour
     private Canvas canvas;
 
     private bool presentOverlayPicker;
+    private bool presentSettingWindow;
 
     private void Start()
     {
         presentOverlayPicker = false;
+        presentSettingWindow = false;
     }
 
     // Update is called once per frame
@@ -46,6 +48,14 @@ public class UIControlManager : MonoBehaviour
     
     public void OnSettingClick()
     {
-        Debug.Log("Setting!");
+        Debug.Log("[OnSettingClick] add setting "+presentOverlayPicker);
+        if (presentSettingWindow) return;
+        var picker = SettingWindowManager.CreateInstance();
+        presentSettingWindow = true;
+        picker.deleteCallback = () =>
+        {
+            Debug.Log("[OnSettingClick] delete");
+            presentSettingWindow = false;
+        };
     }
 }

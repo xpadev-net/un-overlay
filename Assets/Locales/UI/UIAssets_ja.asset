@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97269afb30aa84742ae3f3342603618a, type: 3}
+  m_Name: UIAssets_ja
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: ja
+  m_SharedData: {fileID: 11400000, guid: 1e832b9b9063a4e4b91189584ecf0daa, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 809502490624
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 819040337920
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1[NotoSansJP-VariableFont_wght SDF
+      Material]
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1544730427392
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1544755593216
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1[NotoSansJP-VariableFont_wght SDF
+      Material]
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1942136537088
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1942153314304
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1[NotoSansJP-VariableFont_wght SDF
+      Material]
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
