@@ -60,24 +60,24 @@ MonoBehaviour:
   SideBySide: 0
   OverlayFriendlyName: dev.xpa.test
   OverlayKeyName: dev.xpa.test
-  DeviceTracking: 0
-  DeviceIndex: -99
-  Seated: 0
-  ResetSeatedCamera: 0
+  deviceTracking: 0
+  deviceIndex: 0
+  seated: 0
+  resetSeatedCamera: 0
   putLogDevicesInfo: 0
-  ConnectedDevices: 0
-  SelectedDeviceIndex: 0
-  DeviceSerialNumber: 
-  DeviceRenderModelName: 
+  connectedDevices: 0
+  selectedDeviceIndex: 0
+  deviceSerialNumber: 
+  deviceRenderModelName: 
   laycastRootObject: {fileID: 1419635037939235760}
   tappedLeft: 0
   tappedRight: 0
-  LeftHandU: -1
-  LeftHandV: -1
-  LeftHandDistance: -1
-  RightHandU: -1
-  RightHandV: -1
-  RightHandDistance: -1
+  leftHandU: -1
+  leftHandV: -1
+  leftHandDistance: -1
+  rightHandU: -1
+  rightHandV: -1
+  rightHandDistance: -1
   cursorManager: {fileID: 5654894979555038426}
 --- !u!114 &1419635037705927964
 MonoBehaviour:

@@ -116,7 +116,7 @@ public class ClockWindowManager : MonoBehaviour {
             return; // 更新しない
         }
 
-        easyOpenVROverlay.DeviceTracking = true;
+        easyOpenVROverlay.deviceTracking = true;
         easyOpenVROverlay.deviceIndex =
             isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
                        : EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;

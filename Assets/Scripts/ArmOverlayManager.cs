@@ -30,8 +30,8 @@ public class ArmOverlayManager : MonoBehaviour {
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
         overlaySystem = transform.Find("ClockSystem").gameObject;
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
-        easyOverlay.OverlayKeyName = overlayId;
-        easyOverlay.OverlayFriendlyName = overlayId;
+        easyOverlay.overlayKeyName = overlayId;
+        easyOverlay.overlayFriendlyName = overlayId;
         easyOverlay.Init();
         var sizeDelta = canvasRectTransform.sizeDelta;
         windowWidth = (int)sizeDelta.x;

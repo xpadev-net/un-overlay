@@ -95,20 +95,20 @@ namespace EasyLazyLibrary
         public bool show = true;
 
         //サイドバイサイド3D
-        public bool SideBySide = false;
+        public bool sideBySide = false;
 
 
         [Header("Name")]
         //ユーザーが確認するためのオーバーレイの名前
-        public string OverlayFriendlyName = "SampleOverlay";
+        public string overlayFriendlyName = "SampleOverlay";
 
         //グローバルキー(システムのオーバーレイ同士の識別名)。
         //ユニークでなければならない。乱数やUUIDなどを勧める
-        public string OverlayKeyName = "SampleOverlay";
+        public string overlayKeyName = "SampleOverlay";
 
         [Header("DeviceTracking")]
         //絶対空間か
-        public bool DeviceTracking = true;
+        public bool deviceTracking = true;
 
         //追従対象デバイス。HMD=0
         //public uint DeviceIndex = OpenVR.k_unTrackedDeviceIndex_Hmd;
@@ -346,7 +346,7 @@ namespace EasyLazyLibrary
 
             //オーバーレイ機能の初期化
             overlay = OpenVR.Overlay;
-            var overlayError = overlay.CreateOverlay(OverlayKeyName, OverlayFriendlyName, ref overlayHandle);
+            var overlayError = overlay.CreateOverlay(overlayKeyName, overlayFriendlyName, ref overlayHandle);
             if (overlayError != EVROverlayError.None)
             {
                 Debug.LogError(currentMethod + "Overlayの初期化に失敗. " + overlayError.ToString());
@@ -484,7 +484,7 @@ namespace EasyLazyLibrary
             p.m11 = m.m23;
 
             //回転行列を元に相対位置で表示
-            if (DeviceTracking)
+            if (deviceTracking)
             {
                 //deviceindexを処理(コントローラーなどはその時その時で変わるため)
                 var idx = OpenVR.k_unTrackedDeviceIndex_Hmd;
@@ -567,7 +567,7 @@ namespace EasyLazyLibrary
                                    System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
-            overlay.SetOverlayFlag(overlayHandle, VROverlayFlags.SideBySide_Parallel, SideBySide);
+            overlay.SetOverlayFlag(overlayHandle, VROverlayFlags.SideBySide_Parallel, sideBySide);
 
             //RenderTextureが生成されているかチェック
             if (!renderTexture.IsCreated())

@@ -38,8 +38,8 @@ public class DesktopOverlayManager : MonoBehaviour {
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
         overlaySystem = transform.Find("OverlaySystem").gameObject;
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
-        easyOverlay.OverlayKeyName = overlayId;
-        easyOverlay.OverlayFriendlyName = overlayId;
+        easyOverlay.overlayKeyName = overlayId;
+        easyOverlay.overlayFriendlyName = overlayId;
         easyOverlay.Init();
     }
 
