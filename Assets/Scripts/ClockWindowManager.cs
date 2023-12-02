@@ -46,6 +46,7 @@ public class ClockWindowManager : MonoBehaviour {
         util.Init();
         leftCursorTextRectTransform = leftCursorText.GetComponent<RectTransform>();
         rightCursorTextRectTransform = rightCursorText.GetComponent<RectTransform>();
+        isLeftHand = false;
     }
 
     private void Update() {
@@ -119,7 +120,7 @@ public class ClockWindowManager : MonoBehaviour {
         easyOpenVROverlay.DeviceIndex =
             isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
                        : EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
-        easyOpenVROverlay.Position = new Vector3(-0.05f, 0, -0.1f);
-        easyOpenVROverlay.Rotation = new Vector3(190, 90, 0);
+        easyOpenVROverlay.Position = isLeftHand ?new Vector3(-0.05f, 0, -0.1f):new Vector3(0.05f, 0, -0.1f);
+        easyOpenVROverlay.Rotation = isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
     }
 }
