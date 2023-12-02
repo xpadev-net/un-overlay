@@ -894,8 +894,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u53F3\u624B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f357233ab64cfb34d909ff02543a7cd1, type: 2}
+  m_sharedMaterial: {fileID: -9085241196350666446, guid: f357233ab64cfb34d909ff02543a7cd1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1130,6 +1130,7 @@ GameObject:
   - component: {fileID: 4683786085002516208}
   - component: {fileID: 6848816198177514857}
   - component: {fileID: 9026853583516231177}
+  - component: {fileID: 6017543932680047941}
   m_Layer: 5
   m_Name: AnchorHandLeft
   m_TagString: Untagged
@@ -1265,7 +1266,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLeft: 0
-  isActive: 0
 --- !u!114 &6848816198177514857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1279,7 +1279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 5, y: 5}
+  m_EffectDistance: {x: 2, y: 2}
   m_UseGraphicAlpha: 1
 --- !u!114 &9026853583516231177
 MonoBehaviour:
@@ -1297,6 +1297,51 @@ MonoBehaviour:
   hoverBgColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
   defaultOutlineColor: {r: 0, g: 0, b: 0, a: 0}
   hoverOutlineColor: {r: 0, g: 1, b: 0.1551485, a: 1}
+--- !u!114 &6017543932680047941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3401104385202246953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9026853583516231177}
+          m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+          m_MethodName: OnMouseEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9026853583516231177}
+          m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+          m_MethodName: OnMouseExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &3721898792099777177
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,7 +1398,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
@@ -1443,8 +1488,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u5DE6\u624B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f357233ab64cfb34d909ff02543a7cd1, type: 2}
+  m_sharedMaterial: {fileID: -9085241196350666446, guid: f357233ab64cfb34d909ff02543a7cd1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1643,7 +1688,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: "\u8A00\u8A9E"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f357233ab64cfb34d909ff02543a7cd1, type: 2}
   m_sharedMaterial: {fileID: -9085241196350666446, guid: f357233ab64cfb34d909ff02543a7cd1, type: 2}
@@ -2375,6 +2420,7 @@ GameObject:
   - component: {fileID: 292231569051273949}
   - component: {fileID: 8849224376163864942}
   - component: {fileID: 1087133704027003540}
+  - component: {fileID: 1077290380062670629}
   m_Layer: 5
   m_Name: AnchorHandRight
   m_TagString: Untagged
@@ -2510,7 +2556,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLeft: 1
-  isActive: 0
 --- !u!114 &8849224376163864942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2524,7 +2569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 5, y: 5}
+  m_EffectDistance: {x: 2, y: 2}
   m_UseGraphicAlpha: 1
 --- !u!114 &1087133704027003540
 MonoBehaviour:
@@ -2542,6 +2587,51 @@ MonoBehaviour:
   hoverBgColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
   defaultOutlineColor: {r: 0, g: 0, b: 0, a: 0}
   hoverOutlineColor: {r: 0, g: 1, b: 0.1551485, a: 1}
+--- !u!114 &1077290380062670629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7612221997548659341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1087133704027003540}
+          m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+          m_MethodName: OnMouseEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1087133704027003540}
+          m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+          m_MethodName: OnMouseExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &7874750263759735699
 GameObject:
   m_ObjectHideFlags: 0
