@@ -27,8 +27,8 @@ public class DesktopOverlayManager : MonoBehaviour
         manager.desktopIndex = desktopIndex;
         return manager;
     }
-    
-    void Start()
+
+    private void Start()
     {
         overlayId = Const.overlayKeyPrefix+"."+Uuid.GetUuid();
         initialized = false;
@@ -47,7 +47,7 @@ public class DesktopOverlayManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (!initialized)
         {

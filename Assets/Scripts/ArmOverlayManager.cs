@@ -22,8 +22,8 @@ public class ArmOverlayManager : MonoBehaviour
         var manager = Instantiate(prefab).GetComponent<ArmOverlayManager>();
         return manager;
     }
-    
-    void Start()
+
+    private void Start()
     {
         overlayId = Const.overlayKeyPrefix+"."+Uuid.GetUuid();
         initialized = false;
@@ -47,7 +47,7 @@ public class ArmOverlayManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (initialized) return;
         initialized = true;

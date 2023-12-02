@@ -1,4 +1,4 @@
-﻿public class Const
+﻿public abstract class Const
 {
-        public static string overlayKeyPrefix = "dev.xpa.steamvr-overlay";
+        public const string overlayKeyPrefix = "dev.xpa.steamvr-overlay";
 }

@@ -1,4 +1,4 @@
-﻿public class Uuid
+﻿public abstract class Uuid
 {
     public static string GetUuid()
     {

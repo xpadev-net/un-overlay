@@ -35,18 +35,13 @@ public class ClockWindowManager : MonoBehaviour {
 
     private readonly EasyOpenVRUtil util = new EasyOpenVRUtil(); //姿勢取得ライブラリ
 
-    public Vector3 overlayPosition = new Vector3(0.03f, -0.25f, 0.5f); //HMDの前方50cm、25cm下の位置に表示
-    public Vector3 overlayRotation = new Vector3(-20f, 0, 0); //操作しやすいよう-20°傾ける
-
-    private bool isScreenMoving = false; //画面を移動させようとしているか？
-    private bool screenMoveWithRight = false; //それが右手で行われているか？
-
     private bool positionInitialize = true; //位置を初期化するフラグ(完了するとfalseになる)
     
     private Vector3 screenOffsetTransform;
     private Quaternion screenOffsetRotation;
-    private bool isLeftHand = true;
-    
+    [SerializeField]
+    public bool isLeftHand = true;
+
     private void Start () {
         //姿勢取得ライブラリを初期化
         util.Init();
@@ -98,16 +93,16 @@ public class ClockWindowManager : MonoBehaviour {
     {
         if (easyOpenVROverlay.LeftHandU > -1f && !isLeftHand)
         {
-            if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetLeftControllerIndex(), EVRButtonId.k_EButton_Grip))
-            {
-            }
+            // if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetLeftControllerIndex(), EVRButtonId.k_EButton_Grip))
+            // {
+            // }
             return;
         }
         if (easyOpenVROverlay.RightHandU > -1f && isLeftHand)
         {
-            if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetRightControllerIndex(), EVRButtonId.k_EButton_Grip))
-            {
-            }
+            // if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetRightControllerIndex(), EVRButtonId.k_EButton_Grip))
+            // {
+            // }
         }
     }
 
