@@ -4,7 +4,7 @@ using UnityEngine;
 public class WindowControl : MonoBehaviour {
     public static WindowControl instance;
     
-    private List<OverlayWindowManager> managers;
+    private List<DesktopOverlayManager> managers;
     private bool isHoldingWindow;
     private int posLeft;
     private void Awake() {
@@ -17,28 +17,41 @@ public class WindowControl : MonoBehaviour {
 
         posLeft = 0;
         isHoldingWindow = false;
-        managers = new List<OverlayWindowManager>();
+        managers = new List<DesktopOverlayManager>();
     }
 
-    public int RegisterWindow(OverlayWindowManager self,int width)
+    public int RegisterWindow(DesktopOverlayManager self,int width)
     {
         if (self)
         {
-            managers.Add(self);            
+            managers.Add(self);
+            Debug.Log(self.overlayId);            
         }
+        Debug.Log("added!" + posLeft);
         var result = posLeft;
         posLeft += width + 50;
         return result + width / 2;
     }
 
-    public bool TryToGrubWindow(OverlayWindowManager self,bool isLeft) {
+    public bool TryToGrubWindow(string selfId,bool isLeft) {
         if (isHoldingWindow) return false;
-        if (self.id != GetFrontWindowName(isLeft)) return false;
+        if (selfId != GetFrontWindowName(isLeft)) return false;
         isHoldingWindow = true;
         return true;
     }
 
     public void ReleaseWindow() {
+        isHoldingWindow = false;
+    }
+
+    public void Reset()
+    {
+        foreach (var manager in managers)
+        {
+            manager.Remove();
+        }
+        managers.Clear();
+        posLeft = 0;
         isHoldingWindow = false;
     }
     
@@ -48,11 +61,11 @@ public class WindowControl : MonoBehaviour {
         foreach (var manager in managers)
         {
             var distance = isLeft
-                ? manager.easyOpenVROverlay.leftHandDistance
-                : manager.easyOpenVROverlay.rightHandDistance;
+                ? manager.easyOverlay.leftHandDistance
+                : manager.easyOverlay.rightHandDistance;
             if (distance >= shortestDistance || distance < 0) continue;
             shortestDistance = distance;
-            managerId = manager.id;
+            managerId = manager.overlayId;
         }
         return managerId;
     }

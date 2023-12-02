@@ -7,6 +7,8 @@ using Valve.VR;
 public class UIControlManager : MonoBehaviour
 {
     [SerializeField]
+    private GameObject clockSystem;
+    [SerializeField]
     private EasyOpenVROverlayForUnity easyOpenVROverlay;
 
     [SerializeField] 
@@ -16,12 +18,14 @@ public class UIControlManager : MonoBehaviour
     //Canvas上の要素を特定してクリックする
     public void OnAddDesktopClick()
     {
-        Debug.Log("Add Desktop!");
+        DesktopOverlayManager.Init(0);
     }
 
     public void OnResetClick()
     {
-        Debug.Log("Reset!");
+        Debug.Log("reset");
+        WindowControl.instance.Reset();
+        clockSystem.GetComponent<ArmOverlayManager>().RegisterWindow();
     }
     
     public void OnSettingClick()

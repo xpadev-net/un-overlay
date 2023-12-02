@@ -49,17 +49,17 @@ MonoBehaviour:
   error: 1
   eventLog: 0
   renderTexture: {fileID: 8400000, guid: 6d112916b41c17b449304b0bdbaec2af, type: 2}
-  Position: {x: 0, y: -0.5, z: 3}
-  Rotation: {x: 0, y: 0, z: 0}
-  Scale: {x: 1, y: 1, z: 1}
-  MirrorX: 0
-  MirrorY: 0
+  position: {x: 0, y: -0.5, z: 3}
+  rotation: {x: 0, y: 0, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  mirrorX: 0
+  mirrorY: 0
   width: 1
   alpha: 1
   show: 1
-  SideBySide: 0
-  OverlayFriendlyName: dev.xpa.test
-  OverlayKeyName: dev.xpa.test
+  sideBySide: 0
+  overlayFriendlyName: SampleOverlay
+  overlayKeyName: SampleOverlay
   deviceTracking: 0
   deviceIndex: 0
   seated: 0
@@ -529,6 +529,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desktopIndex: -1
+  desktopCapture: {fileID: 1419635038976169965}
+  canvas: {fileID: 1419635037939235760}
+  overlayCameraObj: {fileID: 1419635038909201068}
+  overlaySystem: {fileID: 1419635037705927961}
+  easyOverlay: {fileID: 1419635037705927962}
+  overlayId: 
 --- !u!1 &1419635038536794181
 GameObject:
   m_ObjectHideFlags: 0

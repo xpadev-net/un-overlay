@@ -200,7 +200,7 @@ namespace EasyLazyLibrary
         //無効なハンドル
         private const ulong InvalidHandle = 0;
 
-        private bool initialized = false;
+        public bool initialized = false;
         
         [SerializeField]
         private CursorManager cursorManager;
@@ -377,19 +377,23 @@ namespace EasyLazyLibrary
 
             //--------
             //showDevices();
-
-            Debug.Log(currentMethod + "初期化完了しました");
+            initialized = true;
+            Debug.Log(currentMethod + "init complete "+transform.GetInstanceID());
         }
         
         private void Update()
         {
 
-            if (!initialized) return;
 #pragma warning disable 0219
             string currentMethod = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
 #pragma warning restore 0219
 
+            if (!initialized)
+            {
+                Debug.Log(currentMethod+" nor initialized"+transform.GetInstanceID());
+                return;
+            }
             //エラーが発生した場合や、ハンドルが無効な場合は実行しない
             if (IsError())
             {

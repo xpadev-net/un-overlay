@@ -39,19 +39,22 @@ public class OverlayWindowManager : MonoBehaviour {
         new Vector3(0.03f, -0.25f, 0.5f); // HMDの前方50cm、25cm下の位置に表示
     public Vector3 overlayRotation = new Vector3(-20f, 0, 0); // 操作しやすいよう-20°傾ける
 
-    private bool isScreenMoving = false;      // 画面を移動させようとしているか？
-    private bool screenMoveWithRight = false; // それが右手で行われているか？
+    private bool isScreenMoving;      // 画面を移動させようとしているか？
+    private bool isHoldingWithLeft; // それが右手で行われているか？
 
     private bool positionInitialize = true; // 位置を初期化するフラグ(完了するとfalseになる)
 
     private Vector3 screenOffsetTransform;
 
-    public string id;
-
     private void Start() {
         // 姿勢取得ライブラリを初期化
-        id = Uuid.GetUuid();
+    }
+
+    public void Init()
+    {
         util.Init();
+        isScreenMoving = false;
+        isHoldingWithLeft = false;
         leftCursorTextRectTransform = leftCursorText.GetComponent<RectTransform>();
         rightCursorTextRectTransform = rightCursorText.GetComponent<RectTransform>();
     }
@@ -103,17 +106,16 @@ public class OverlayWindowManager : MonoBehaviour {
         if (!isScreenMoving)
             return;
         // ボタンが一切押されなくなったならば移動モードから抜ける
-        if ((!screenMoveWithRight && !util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
+        if ((isHoldingWithLeft && !util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
                                                                      EVRButtonId.k_EButton_Grip)) ||
-            (screenMoveWithRight && !util.IsControllerButtonPressed(util.GetRightControllerIndex(),
+            (!isHoldingWithLeft && !util.IsControllerButtonPressed(util.GetRightControllerIndex(),
                                                                     EVRButtonId.k_EButton_Grip))) {
             isScreenMoving = false;
             WindowControl.instance.ReleaseWindow();
             return;
         }
         var pos = util.GetHMDTransform(); // HMDが有効か調べる
-        var cpos = screenMoveWithRight ? util.GetRightControllerTransform()
-                                       : util.GetLeftControllerTransform(); // 任意の手の姿勢情報
+        var cpos = isHoldingWithLeft ? util.GetLeftControllerTransform() : util.GetRightControllerTransform(); // 任意の手の姿勢情報
         // HMDも取得したコントローラ姿勢も有効ならば
         if (pos == null || cpos == null)
             return;
@@ -135,9 +137,9 @@ public class OverlayWindowManager : MonoBehaviour {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
                                                EVRButtonId.k_EButton_Grip) &&
-                WindowControl.instance.TryToGrubWindow(this,true)) {
+                WindowControl.instance.TryToGrubWindow(easyOpenVROverlay.overlayKeyName,true)) {
                 isScreenMoving = true;
-                screenMoveWithRight = false;
+                isHoldingWithLeft = true;
 
                 var cpos = util.GetLeftControllerTransform();
                 UpdateOffset(cpos);
@@ -148,9 +150,9 @@ public class OverlayWindowManager : MonoBehaviour {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetRightControllerIndex(),
                                                EVRButtonId.k_EButton_Grip) &&
-                WindowControl.instance.TryToGrubWindow(this,false)) {
+                WindowControl.instance.TryToGrubWindow(easyOpenVROverlay.overlayKeyName,false)) {
                 isScreenMoving = true;
-                screenMoveWithRight = true;
+                isHoldingWithLeft = false;
                 var cpos = util.GetRightControllerTransform();
                 UpdateOffset(cpos);
                 return;
@@ -181,10 +183,5 @@ public class OverlayWindowManager : MonoBehaviour {
         easyOpenVROverlay.rotation =
             (new Vector3(-pos.rotation.eulerAngles.x, -pos.rotation.eulerAngles.y, 0)) +
             overlayRotation;
-    }
-
-    public int GetWindowIndex(int windowWidth)
-    {
-        return WindowControl.instance.RegisterWindow(this, windowWidth);
     }
 }

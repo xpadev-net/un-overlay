@@ -5,45 +5,43 @@ using uWindowCapture;
 
 public class DesktopOverlayManager : MonoBehaviour {
     public int desktopIndex = -1;
-    private GameObject desktopCapture;
+    [SerializeField]private GameObject desktopCapture;
     private Transform desktopCaptureTransform;
-    private GameObject canvas;
+    [SerializeField]private GameObject canvas;
     private RectTransform canvasRectTransform;
     private UwcWindowTexture windowTexture;
     private RenderTexture targetTexture;
-    private GameObject overlayCameraObj;
+    [SerializeField]private GameObject overlayCameraObj;
     private Camera overlayCamera;
-    private GameObject overlaySystem;
-    private EasyOpenVROverlayForUnity easyOverlay;
-    private string overlayId;
+    [SerializeField]private GameObject overlaySystem;
+    public EasyOpenVROverlayForUnity easyOverlay;
+    public string overlayId;
     private OverlayWindowManager windowManager;
 
     private int windowWidth;
     private int windowHeight;
     private bool initialized;
-    public static DesktopOverlayManager Init(int desktopIndex) {
+    public static DesktopOverlayManager Init(int desktopIndex ) {
         var prefab = Resources.Load<GameObject>("DesktopOverlayManager");
         var manager = Instantiate(prefab).GetComponent<DesktopOverlayManager>();
         manager.desktopIndex = desktopIndex;
+        manager.Init();
         return manager;
     }
 
-    private void Start() {
+    private void Init() {
+        Debug.Log("Desktop Overlay Manager Init Start");
         overlayId = Const.overlayKeyPrefix + "." + Uuid.GetUuid();
         initialized = false;
-        desktopCapture = transform.Find("DesktopCapture").gameObject;
         windowTexture = desktopCapture.GetComponent<UwcWindowTexture>();
         desktopCaptureTransform = desktopCapture.GetComponent<Transform>();
-        canvas = transform.Find("Canvas").gameObject;
         canvasRectTransform = canvas.GetComponent<RectTransform>();
-        overlayCameraObj = transform.Find("OverlayCamera").gameObject;
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
-        overlaySystem = transform.Find("OverlaySystem").gameObject;
         windowManager = overlaySystem.GetComponent<OverlayWindowManager>();
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
         easyOverlay.overlayKeyName = overlayId;
         easyOverlay.overlayFriendlyName = overlayId;
-        easyOverlay.Init();
+        Debug.Log("Desktop Overlay Manager Init Complete");
     }
 
     // Update is called once per frame
@@ -65,11 +63,18 @@ public class DesktopOverlayManager : MonoBehaviour {
             canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
             windowTexture.desktopIndex = desktopIndex;
             transform.position =
-                new Vector3(windowManager.GetWindowIndex(windowWidth), 0, 0);
+                new Vector3(WindowControl.instance.RegisterWindow(this,windowWidth), 0, 0);
+            windowManager.Init();
+            easyOverlay.Init();
         }
 
         if (windowTexture.desktopIndex != desktopIndex) {
             windowTexture.desktopIndex = desktopIndex;
         }
+    }
+    
+    public void Remove()
+    {
+        Destroy(gameObject);
     }
 }
