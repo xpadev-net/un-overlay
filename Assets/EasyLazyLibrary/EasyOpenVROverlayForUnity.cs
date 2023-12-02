@@ -47,14 +47,9 @@
  * なお、LaycastRootObjectをnull(None)にするとGUI機能は無効化される
  */
 
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 using Valve.VR;
-using Button = UnityEngine.UIElements.Button; //Steam VR
 
 
 namespace EasyLazyLibrary
@@ -73,15 +68,15 @@ namespace EasyLazyLibrary
 
         [Header("Transform")]
         //Unity準拠の位置と回転
-        public Vector3 Position = new Vector3(0, -0.5f, 3);
+        public Vector3 position = new Vector3(0, -0.5f, 3);
 
-        public Vector3 Rotation = new Vector3(0, 0, 0);
+        public Vector3 rotation = new Vector3(0, 0, 0);
 
-        public Vector3 Scale = new Vector3(1, 1, 1);
+        public Vector3 scale = new Vector3(1, 1, 1);
 
         //鏡像反転できるように
-        public bool MirrorX = false;
-        public bool MirrorY = false;
+        public bool mirrorX = false;
+        public bool mirrorY = false;
 
         [Header("Setting")]
         //オーバーレイの大きさ設定(幅のみ。高さはテクスチャの比から自動計算される)
@@ -459,15 +454,15 @@ namespace EasyLazyLibrary
             }
 
             //回転を生成
-            Quaternion quaternion = Quaternion.Euler(Rotation.x, Rotation.y, Rotation.z);
+            Quaternion quaternion = Quaternion.Euler(rotation.x, rotation.y, rotation.z);
             //座標系を変更(右手系と左手系の入れ替え)
-            Vector3 position = Position;
-            position.z = -Position.z;
+            Vector3 position = this.position;
+            position.z = -this.position.z;
             //HMD視点位置変換行列に書き込む。
-            Matrix4x4 m = Matrix4x4.TRS(position, quaternion, Scale);
+            Matrix4x4 m = Matrix4x4.TRS(position, quaternion, scale);
 
             //鏡像反転
-            Vector3 Mirroring = new Vector3(MirrorX ? -1 : 1, MirrorY ? -1 : 1, 1);
+            Vector3 Mirroring = new Vector3(mirrorX ? -1 : 1, mirrorY ? -1 : 1, 1);
 
             //4x4行列を3x4行列に変換する。
             p.m0 = Mirroring.x * m.m00;

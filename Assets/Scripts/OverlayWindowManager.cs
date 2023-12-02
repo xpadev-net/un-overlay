@@ -119,11 +119,11 @@ public class OverlayWindowManager : MonoBehaviour {
         var ang = rotate.eulerAngles;
 
         // コントローラの位置をそのままOverlayの位置に反映
-        easyOpenVROverlay.Position = cpos.position - rotate * screenOffsetTransform;
+        easyOpenVROverlay.position = cpos.position - rotate * screenOffsetTransform;
         ; // これが難しい...
 
         // コントローラの回転を適時反転させてOverlayの回転に反映(こちら向きにする)
-        easyOpenVROverlay.Rotation = new Vector3(-ang.x, -ang.y, ang.z);
+        easyOpenVROverlay.rotation = new Vector3(-ang.x, -ang.y, ang.z);
     }
 
     // コントローラによる画面移動モードにはいる
@@ -158,7 +158,7 @@ public class OverlayWindowManager : MonoBehaviour {
     private void UpdateOffset(EasyOpenVRUtil.Transform baseTransform) {
         var rotate =
             Quaternion.Inverse(baseTransform.rotation * Quaternion.AngleAxis(45, Vector3.right));
-        screenOffsetTransform = rotate * (baseTransform.position - easyOpenVROverlay.Position);
+        screenOffsetTransform = rotate * (baseTransform.position - easyOpenVROverlay.position);
     }
 
     // HMDの位置を基準に操作しやすい位置に画面を出す
@@ -172,10 +172,10 @@ public class OverlayWindowManager : MonoBehaviour {
         }
 
         // HMDの位置に、基準位置とHMD角度を加算したものを、表示位置とする(でないと明後日の方向に移動するため)
-        easyOpenVROverlay.Position = pos.position + pos.rotation * overlayPosition;
+        easyOpenVROverlay.position = pos.position + pos.rotation * overlayPosition;
 
         // HMDの角度を一部反転したものに、基準角度を加算したものを、表示角度とする
-        easyOpenVROverlay.Rotation =
+        easyOpenVROverlay.rotation =
             (new Vector3(-pos.rotation.eulerAngles.x, -pos.rotation.eulerAngles.y, 0)) +
             overlayRotation;
     }

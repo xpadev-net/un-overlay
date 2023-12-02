@@ -120,7 +120,7 @@ public class ClockWindowManager : MonoBehaviour {
         easyOpenVROverlay.deviceIndex =
             isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
                        : EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
-        easyOpenVROverlay.Position = isLeftHand ?new Vector3(-0.05f, 0, -0.1f):new Vector3(0.05f, 0, -0.1f);
-        easyOpenVROverlay.Rotation = isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
+        easyOpenVROverlay.position = isLeftHand ?new Vector3(-0.05f, 0, -0.1f):new Vector3(0.05f, 0, -0.1f);
+        easyOpenVROverlay.rotation = isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
     }
 }
