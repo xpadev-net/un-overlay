@@ -9,6 +9,8 @@ public class DesktopButton : MonoBehaviour
     private GameObject desktopCapture;
     private UwcWindowTexture windowTexture;
     private bool initialized;
+    public delegate void OnWindowCreateCallback();
+    public OnWindowCreateCallback windowCreateHandler;
 
     private void Start()
     {
@@ -51,7 +53,9 @@ public class DesktopButton : MonoBehaviour
 
     public void OnClick()
     {
+        Debug.Log("DesktopButton OnClick");
         DesktopOverlayManager.CreateInstance(desktopIndex);
+        windowCreateHandler?.Invoke();
     }
 
     private void OnDestroy()

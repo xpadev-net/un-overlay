@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EasyLazyLibrary;
 using UnityEngine;
@@ -13,13 +14,27 @@ public class UIControlManager : MonoBehaviour
 
     [SerializeField] 
     private Canvas canvas;
-    
+
+    private bool PresentOverlayPicker;
+
+    private void Update()
+    {
+        PresentOverlayPicker = false;
+    }
+
     // Update is called once per frame
     //Canvas上の要素を特定してクリックする
     public void OnAddDesktopClick()
     {
         Debug.Log("add desktop");
-        DesktopOverlayPickerManager.CreateInstance();
+        if (PresentOverlayPicker) return;
+        var picker = DesktopOverlayPickerManager.CreateInstance();
+        PresentOverlayPicker = true;
+        picker.deleteCallback = () =>
+        {
+            Debug.Log("delete");
+            PresentOverlayPicker = false;
+        };
     }
 
     public void OnResetClick()

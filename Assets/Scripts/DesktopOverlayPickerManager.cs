@@ -17,6 +17,9 @@ public class DesktopOverlayPickerManager : MonoBehaviour
     private string overlayId;
     private bool initialized;
     private List<DesktopButton> buttons;
+    public delegate void OnDeleteCallback();
+    public OnDeleteCallback deleteCallback;
+    
     public static DesktopOverlayPickerManager CreateInstance() {
         var prefab = Resources.Load<GameObject>("DesktopOverlayPickerManager");
         var manager = Instantiate(prefab).GetComponent<DesktopOverlayPickerManager>();
@@ -58,6 +61,7 @@ public class DesktopOverlayPickerManager : MonoBehaviour
         {
             var button = DesktopButton.CreateInstance(i,canvasObj);
             button.transform.SetParent(buttonGroup.transform);
+            button.windowCreateHandler = CloseWindow;
             button.Init();
             buttons.Add(button);
         }
@@ -86,5 +90,12 @@ public class DesktopOverlayPickerManager : MonoBehaviour
             CreateButtons();
             return;
         }
+    }
+
+    private void CloseWindow()
+    {
+        Debug.Log("DesktopOverlayPickerManager CloseWindow");
+        deleteCallback?.Invoke();
+        Destroy(gameObject);
     }
 }
