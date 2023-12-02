@@ -45,7 +45,7 @@ public class DesktopButton : MonoBehaviour
         windowTexture.scaleControlType = windowWidth < windowHeight ? WindowTextureScaleControlType.FixedHeight : WindowTextureScaleControlType.FixedWidth;
         var canvasSizeDelta = canvasObj.GetComponent<RectTransform>().sizeDelta;
         var rectTransform = gameObject.GetComponent<RectTransform>();
-        desktopCapture.transform.position = canvasObj.transform.position + new Vector3(-canvasSizeDelta.x/2,canvasSizeDelta.y/2,1) + (Vector3)rectTransform.anchoredPosition;
+        desktopCapture.transform.position = canvasObj.transform.position + new Vector3(-canvasSizeDelta.x/2,canvasSizeDelta.y/2,-1) + (Vector3)rectTransform.anchoredPosition;
         initialized = true;
     }
 
