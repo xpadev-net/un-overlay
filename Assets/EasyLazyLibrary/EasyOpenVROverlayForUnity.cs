@@ -51,7 +51,9 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Valve.VR; //Steam VR
+using UnityEngine.UI;
+using Valve.VR;
+using Button = UnityEngine.UIElements.Button; //Steam VR
 
 
 namespace EasyLazyLibrary
@@ -163,6 +165,9 @@ namespace EasyLazyLibrary
         public bool tappedLeft = false;
         public bool tappedRight = false;
 
+        public bool triggeredLeft = false;
+        public bool triggeredRight = false;
+
         //タップ距離
         public float TapOnDistance = 0.04f;
         public float TapOffDistance = 0.043f;
@@ -203,6 +208,11 @@ namespace EasyLazyLibrary
         private const ulong INVALID_HANDLE = 0;
 
         private bool initialized = false;
+        
+        private readonly EasyOpenVRUtil util = new EasyOpenVRUtil(); // 姿勢取得ライブラリ
+
+        [SerializeField] public GameObject pos;
+        [SerializeField] public Camera camera;
 
         //--------------------------------------------------------------------------
 
@@ -781,7 +791,7 @@ namespace EasyLazyLibrary
             openvr.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0f, allDevicePose);
 
             //Overlayのレイ走査結果を格納する変数
-            VROverlayIntersectionResults_t results = new VROverlayIntersectionResults_t();
+            var results = new VROverlayIntersectionResults_t();
 
             /*
             //視線による操作
@@ -797,12 +807,17 @@ namespace EasyLazyLibrary
             if (checkRay(Leftidx, allDevicePose, ref results))
             {
                 //線上にオーバーレイがある場合は続けて処理
-                CheckTapping(results, LeftOrRight.Left, ref tappedLeft);
+                CollisionHaptic(results, LeftOrRight.Left, ref tappedLeft);
 
                 //カーソル表示用に更新
                 LeftHandU = results.vUVs.v0 * renderTexture.width;
                 LeftHandV = renderTexture.height - results.vUVs.v1 * renderTexture.height;
                 LeftHandDistance = results.fDistance;
+
+                if (IsTriggered(true))
+                {
+                    uGUIclick(LeftHandU,LeftHandV);
+                }
             }
             else
             {
@@ -816,12 +831,16 @@ namespace EasyLazyLibrary
             if (checkRay(Rightidx, allDevicePose, ref results))
             {
                 //線上にオーバーレイがある場合は続けて処理
-                CheckTapping(results, LeftOrRight.Right, ref tappedRight);
+                CollisionHaptic(results, LeftOrRight.Right, ref tappedRight);
 
                 //カーソル表示用に更新
                 RightHandU = results.vUVs.v0 * renderTexture.width;
                 RightHandV = renderTexture.height - results.vUVs.v1 * renderTexture.height;
                 RightHandDistance = results.fDistance;
+                if (IsTriggered(false))
+                {
+                    uGUIclick(RightHandU,RightHandV);
+                }
             }
             else
             {
@@ -830,6 +849,7 @@ namespace EasyLazyLibrary
                 RightHandDistance = -1f;
             }
 
+            
         }
 
         //指定されたdeviceが有効かチェックした上で、オーバーレイと交点を持つかチェック
@@ -895,8 +915,44 @@ namespace EasyLazyLibrary
             return overlay.ComputeOverlayIntersection(overlayHandle, ref param, ref results);
         }
 
+        private bool IsTriggered(bool isLeft)
+        {
+            if (isLeft)
+            {
+                if (util.IsControllerButtonPressed(util.GetLeftControllerIndex(), EVRButtonId.k_EButton_SteamVR_Trigger))
+                {
+                    if (!triggeredLeft)
+                    {
+                        //triggeredLeft = true;
+                        return true;
+                    }
+                }
+                else
+                {
+                    triggeredLeft = false;
+                }
+            }
+            else
+            {
+                if (util.IsControllerButtonPressed(util.GetRightControllerIndex(), EVRButtonId.k_EButton_SteamVR_Trigger))
+                {
+                    if (!triggeredRight)
+                    {
+                        //triggeredRight = true;
+                        return true;
+                    }
+                }
+                else
+                {
+                    triggeredRight = false;
+                }
+            }
+
+            return false;
+        }
+
         //タップされているかどうかを調べる
-        private void CheckTapping(VROverlayIntersectionResults_t results, LeftOrRight lr, ref bool tapped)
+        private void CollisionHaptic(VROverlayIntersectionResults_t results, LeftOrRight lr, ref bool tapped)
         {
 
             // string Tag = "[" + this.GetType().Name + ":" + System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
@@ -907,9 +963,6 @@ namespace EasyLazyLibrary
                 //タップされた
                 tapped = true;
                 haptic(lr);
-
-                //クリック処理
-                uGUIclick(results);
             }
 
             //コントローラとオーバーレイの距離が一定以上なら
@@ -927,7 +980,7 @@ namespace EasyLazyLibrary
 
             string Tag = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-            Debug.Log(Tag);
+            //Debug.Log(Tag);
 
             //左手コントローラーが有効かチェック
             uint Leftidx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
@@ -947,17 +1000,22 @@ namespace EasyLazyLibrary
         }
 
         //Canvas上の要素を特定してクリックする
-        private void uGUIclick(VROverlayIntersectionResults_t results)
+        private void uGUIclick(float x, float y)
         {
             string Tag = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-            Debug.Log(Tag);
+            // Debug.Log(Tag);
             //クリック用uv座標を計算
-            float u = results.vUVs.v0 * renderTexture.width;
-            float v = renderTexture.height - results.vUVs.v1 * renderTexture.height;
-
+            var position = transform.position;
+            var rectTransform = LaycastRootObject.GetComponent<RectTransform>();
+            var sizeDelta = rectTransform.sizeDelta;
             //Canvas上のレイキャストのために座標をセット
-            Vector2 ScreenPoint = new Vector2(u, v);
+            Vector2 ScreenPoint = new Vector2(x - sizeDelta.x / 2f + position.x, y - sizeDelta.y / 2f + position.y);
+            
+            Raycast(LaycastRootObject.GetComponent<Canvas>(),camera, new Ray((Vector3)ScreenPoint, Vector3.forward*100));
+            
+            Debug.Log(x +","+ sizeDelta.x / 2f +","+ position.x+","+ y +","+ sizeDelta.y / 2f +","+ position.y);
+            pos.transform.position = (Vector3)ScreenPoint;
             PointerEventData pointer = new PointerEventData(EventSystem.current)
             {
                 position = ScreenPoint
@@ -969,22 +1027,19 @@ namespace EasyLazyLibrary
             //RaycastAllはレイキャスターを叩く。
             //CanvasについていたりCameraについていたりするすべてのレイキャスターを叩く(要らないものは切っておくとよい)
             EventSystem.current.RaycastAll(pointer, result);
-
-            //検出した要素の数と座標
-
-            Debug.Log(Tag + "count:" + result.Count + " u:" + u + " / v:" + v);
-
+            Debug.DrawRay((Vector3)ScreenPoint, Vector3.forward*100, Color.red, 10f);
+            Debug.Log(result.Count);
             //一番最初に見つけた要素にクリック処理を行う
             for (int i = 0; i < result.Count; i++)
             {
                 var res = result[i];
-
+                
+                Debug.Log(Tag + res.gameObject.name + " at " + res.gameObject.transform.root.name + " :"+res.isValid);
                 //一番最初に引っ掛けたものを叩く(target以外はcheckを外しておく)
                 if (res.isValid)
                 {
-                    Debug.Log(Tag + res.gameObject.name + " at " + res.gameObject.transform.root.name);
                     //対象にしたいルートオブジェクトの子かを調べる
-                    if (res.gameObject.transform.root.name == LaycastRootObject.name)
+                    if (res.gameObject.transform.root.name == LaycastRootObject.name && res.gameObject.GetComponentInParent<Button>() != null)
                     {
                         ExecuteEvents.Execute(res.gameObject, pointer, ExecuteEvents.pointerClickHandler);
                         break;
@@ -993,7 +1048,60 @@ namespace EasyLazyLibrary
             }
         }
 
+        private void Raycast(Canvas canvas, Camera eventCamera, Ray ray)
+        {
+            if (!canvas.enabled)
+            {
+                return;
+            }
+
+            if (!canvas.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            IList<Graphic> graphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
+            List<GameObject> result = new List<GameObject>();
+            for (int i = 0; i < graphics.Count; i++)
+            {
+                Graphic graphic = graphics[i];
+
+                if (graphic.depth == -1 || !graphic.raycastTarget)
+                {
+                    continue;
+                }
+
+                Transform graphicTransform = graphic.transform;
+                Vector3 graphicForward = graphicTransform.forward;
+
+                float dir = Vector3.Dot(graphicForward, ray.direction);
+
+                // Return immediately if direction is negative.
+                if (dir <= 0)
+                {
+                    continue;
+                }
+
+                float distance = Vector3.Dot(graphicForward, graphicTransform.position - ray.origin) / dir;
+
+                Vector3 position = ray.GetPoint(distance);
+                Vector2 pointerPosition = eventCamera.WorldToScreenPoint(position);
+
+                // To continue if the graphic doesn't include the point.
+                if (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, pointerPosition, eventCamera))
+                {
+                    continue;
+                }
+
+                // To continue if graphic raycast has failed.
+                if (!graphic.Raycast(pointerPosition, eventCamera))
+                {
+                    continue;
+                }
+                result.Add(graphic.gameObject);
+                Debug.Log($"Raycast hit at {graphic.name}", graphic.gameObject);
+            }
+        }
 
     }
-    
 }

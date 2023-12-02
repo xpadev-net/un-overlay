@@ -17,7 +17,6 @@
 
 using UnityEngine;
 using EasyLazyLibrary;
-using Valve.VR;
 
 public class ClockWindowManager : MonoBehaviour {
     [SerializeField]
