@@ -48,7 +48,7 @@ public class DesktopOverlayPickerManager : MonoBehaviour
         easyOverlay.deviceIndex =
             Config.i.isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
                 : EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
-        easyOverlay.position = Config.i.isLeftHand ?new Vector3(-0.075f, -0.1f, -0.1f):new Vector3(0.05f, 0.5f, -0.1f);
+        easyOverlay.position = Config.i.isLeftHand ?new Vector3(-0.075f, -0.1f, -0.1f):new Vector3(0.075f, -0.1f, -0.1f);
         easyOverlay.rotation = Config.i.isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
         initialized = true;
         Debug.Log(" DesktopOverlayPickerManager Init End with id:"+overlayId);

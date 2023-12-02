@@ -12,7 +12,7 @@ public class Config : MonoBehaviour
         } else {
             Destroy(gameObject);
         }
-        isLeftHand = PlayerPrefs.GetInt("isLeftHand", 1) == 1;
+        isLeftHand = PlayerPrefs.GetInt("isLeftHand", 0) == 1;
     }
     
     public void SetLeftHand(bool isLeft) {
