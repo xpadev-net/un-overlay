@@ -38,8 +38,7 @@ public class ClockWindowManager : MonoBehaviour {
 
     private Vector3 screenOffsetTransform;
     private Quaternion screenOffsetRotation;
-    [SerializeField]
-    public bool isLeftHand = true;
+    private bool isLeftHand = true;
 
     private void Start() {
         // 姿勢取得ライブラリを初期化
@@ -64,6 +63,12 @@ public class ClockWindowManager : MonoBehaviour {
             InitPosition();
             // 初期位置初期化処理を停止
             positionInitialize = false;
+        }
+
+        if (isLeftHand != Config.i.isLeftHand)
+        {
+            isLeftHand = Config.i.isLeftHand;
+            InitPosition();
         }
 
         UpdateCursorPos();
