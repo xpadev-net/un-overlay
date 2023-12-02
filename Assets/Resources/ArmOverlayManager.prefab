@@ -344,6 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6030179896260278404}
   - component: {fileID: 6030179896260278426}
+  - component: {fileID: 5029409758906071804}
   - component: {fileID: 6030179896260278424}
   - component: {fileID: 6030179896260278425}
   m_Layer: 0
@@ -416,6 +417,21 @@ MonoBehaviour:
   RightHandU: -1
   RightHandV: -1
   RightHandDistance: -1
+  eventCamera: {fileID: 6030179896226721266}
+  cursorManager: {fileID: 5029409758906071804}
+--- !u!114 &5029409758906071804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030179896260278405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcbb9718144d45978758438cd76b6989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasObj: {fileID: 6030179896823659864}
   eventCamera: {fileID: 6030179896226721266}
 --- !u!114 &6030179896260278424
 MonoBehaviour:

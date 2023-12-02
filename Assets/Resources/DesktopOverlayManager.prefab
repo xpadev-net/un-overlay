@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1419635037705927963}
   - component: {fileID: 1419635037705927962}
   - component: {fileID: 1419635037705927964}
+  - component: {fileID: 5654894979555038426}
   m_Layer: 0
   m_Name: OverlaySystem
   m_TagString: Untagged
@@ -71,6 +72,8 @@ MonoBehaviour:
   LaycastRootObject: {fileID: 1419635037939235760}
   tappedLeft: 0
   tappedRight: 0
+  triggeredLeft: 0
+  triggeredRight: 0
   TapOnDistance: 0.04
   TapOffDistance: 0.043
   LeftHandU: -1
@@ -79,6 +82,8 @@ MonoBehaviour:
   RightHandU: -1
   RightHandV: -1
   RightHandDistance: -1
+  eventCamera: {fileID: 1419635038909201071}
+  cursorManager: {fileID: 5654894979555038426}
 --- !u!114 &1419635037705927964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +102,20 @@ MonoBehaviour:
   canvasRectTransform: {fileID: 1419635037939235764}
   overlayPosition: {x: 0.03, y: -0.25, z: 0.5}
   overlayRotation: {x: -20, y: 0, z: 0}
+--- !u!114 &5654894979555038426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419635037705927961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcbb9718144d45978758438cd76b6989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasObj: {fileID: 1419635037939235760}
+  eventCamera: {fileID: 1419635038909201071}
 --- !u!1 &1419635037729006657
 GameObject:
   m_ObjectHideFlags: 0

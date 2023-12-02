@@ -160,18 +160,15 @@ namespace EasyLazyLibrary
 
         [Header("GUI Tap")]
         //レイキャスト対象識別用ルートCanvasオブジェクト
-        public GameObject LaycastRootObject = null;
+        [FormerlySerializedAs("LaycastRootObject")] public GameObject laycastRootObject = null;
 
         //タップ状態管理
         public bool tappedLeft = false;
         public bool tappedRight = false;
 
-        public bool triggeredLeft = false;
-        public bool triggeredRight = false;
-
         //タップ距離
-        public float TapOnDistance = 0.04f;
-        public float TapOffDistance = 0.043f;
+        private const float TapOnDistance = 0.04f;
+        private const float TapOffDistance = 0.043f;
 
         //カーソル位置表示用変数
         public float LeftHandU = -1f;
@@ -210,11 +207,8 @@ namespace EasyLazyLibrary
 
         private bool initialized = false;
         
-        private readonly EasyOpenVRUtil util = new EasyOpenVRUtil(); // 姿勢取得ライブラリ
-
-        [FormerlySerializedAs("Camera")] [SerializeField] public Camera eventCamera;
-        private GameObject leftHoveredObject;
-        private GameObject rightHoveredObject;
+        [SerializeField]
+        private CursorManager cursorManager;
 
         //--------------------------------------------------------------------------
 
@@ -322,7 +316,6 @@ namespace EasyLazyLibrary
         private void Start()
         {
             initialized = false;
-            leftHoveredObject = rightHoveredObject= gameObject;
         }
 
         public void Init()
@@ -436,10 +429,10 @@ namespace EasyLazyLibrary
                 updateTexture();
 
                 //Canvasが設定されている場合
-                if (LaycastRootObject != null)
+                if (laycastRootObject != null)
                 {
                     //GUIタッチ機能の処理
-                    updateVRTouch();
+                    UpdateVRTouch();
                 }
             }
 
@@ -779,92 +772,56 @@ namespace EasyLazyLibrary
         //----------おまけ(コントローラーでOverlayを叩いてuGUIをクリックできるやつ)-------------
 
         //uGUIクリックを実現する
-        private void updateVRTouch()
+        private void UpdateVRTouch()
         {
-
-#pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-#pragma warning restore 0219
-
-            //コントローラのindex
-
-            //VR接続されているすべてのデバイスの情報を取得
-            TrackedDevicePose_t[] allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+            var allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             openvr.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0f, allDevicePose);
 
-            //Overlayのレイ走査結果を格納する変数
+            ProcessController(allDevicePose,true,ref LeftHandU,ref LeftHandV,ref LeftHandDistance);
+            ProcessController(allDevicePose,false,ref RightHandU,ref RightHandV,ref RightHandDistance);
+        }
+
+        private void ProcessController(TrackedDevicePose_t[] allDevicePose, bool isLeft,ref float u, ref float v, ref float distance)
+        {
             var results = new VROverlayIntersectionResults_t();
 
-            /*
-            //視線による操作
-            uint Hmdidx = OpenVR.k_unTrackedDeviceIndex_Hmd;
-            if (checkRay(Hmdidx, allDevicePose, ref results))
-            {
-                parent.setCursorPosition(results, LeftOrRight.Right, channel);
-                Debug.Log(DEBUG_TAG + "HMD u:"+results.vUVs.v0+" v:"+ results.vUVs.v1+" d:"+results.fDistance);
-            }
-            */
-            //左手コントローラーの情報取得
-            uint Leftidx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
-            if (checkRay(Leftidx, allDevicePose, ref results))
+            var index =
+                openvr.GetTrackedDeviceIndexForControllerRole(isLeft
+                    ?  ETrackedControllerRole.LeftHand
+                    :ETrackedControllerRole.RightHand);
+            if (CheckRay(index, allDevicePose, ref results))
             {
                 //線上にオーバーレイがある場合は続けて処理
-                CollisionHaptic(results, LeftOrRight.Left, ref tappedLeft);
+                if (isLeft)
+                {
+                    CollisionHaptic(results, LeftOrRight.Left, ref tappedLeft);
+                }
+                else
+                {
+                    CollisionHaptic(results, LeftOrRight.Right, ref tappedRight);
+                }
 
                 //カーソル表示用に更新
-                LeftHandU = results.vUVs.v0 * renderTexture.width;
-                LeftHandV = renderTexture.height - results.vUVs.v1 * renderTexture.height;
-                LeftHandDistance = results.fDistance;
-
-                UpdateCursor(IsTriggered(true),LeftHandU,LeftHandV,ref leftHoveredObject);
+                u = results.vUVs.v0 * renderTexture.width;
+                v = renderTexture.height - results.vUVs.v1 * renderTexture.height;
+                distance = results.fDistance;
+                cursorManager.UpdateCursor(isLeft,new Vector2(u,v));
             }
             else
             {
-                if (LeftHandDistance > -1f)
+                if (distance > -1f)
                 {
-                    HoverOut(ref leftHoveredObject);                    
+                    cursorManager.HoverOut(isLeft);
                 }
-                LeftHandU = -1f;
-                LeftHandV = -1f;
-                LeftHandDistance = -1f;
+                u = -1f;
+                v = -1f;
+                distance = -1f;
             }
-
-            //右手コントローラーの情報取得
-            uint Rightidx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
-            if (checkRay(Rightidx, allDevicePose, ref results))
-            {
-                //線上にオーバーレイがある場合は続けて処理
-                CollisionHaptic(results, LeftOrRight.Right, ref tappedRight);
-
-                //カーソル表示用に更新
-                RightHandU = results.vUVs.v0 * renderTexture.width;
-                RightHandV = renderTexture.height - results.vUVs.v1 * renderTexture.height;
-                RightHandDistance = results.fDistance;
-                UpdateCursor(IsTriggered(false),RightHandU,RightHandV, ref rightHoveredObject);
-            }
-            else
-            {
-                if (RightHandDistance > -1f)
-                {
-                    HoverOut(ref rightHoveredObject);
-                }
-                RightHandU = -1f;
-                RightHandV = -1f;
-                RightHandDistance = -1f;
-            }
-
-            
         }
 
         //指定されたdeviceが有効かチェックした上で、オーバーレイと交点を持つかチェック
-        private bool checkRay(uint idx, TrackedDevicePose_t[] allDevicePose, ref VROverlayIntersectionResults_t results)
+        private bool CheckRay(uint idx, TrackedDevicePose_t[] allDevicePose, ref VROverlayIntersectionResults_t results)
         {
-
-#pragma warning disable 0219
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-#pragma warning restore 0219
 
             //device indexが有効
             if (idx != OpenVR.k_unTrackedDeviceIndexInvalid)
@@ -920,42 +877,6 @@ namespace EasyLazyLibrary
             return overlay.ComputeOverlayIntersection(overlayHandle, ref param, ref results);
         }
 
-        private bool IsTriggered(bool isLeft)
-        {
-            if (isLeft)
-            {
-                if (util.IsControllerButtonPressed(util.GetLeftControllerIndex(), EVRButtonId.k_EButton_SteamVR_Trigger))
-                {
-                    if (!triggeredLeft)
-                    {
-                        triggeredLeft = true;
-                        return true;
-                    }
-                }
-                else
-                {
-                    triggeredLeft = false;
-                }
-            }
-            else
-            {
-                if (util.IsControllerButtonPressed(util.GetRightControllerIndex(), EVRButtonId.k_EButton_SteamVR_Trigger))
-                {
-                    if (!triggeredRight)
-                    {
-                        triggeredRight = true;
-                        return true;
-                    }
-                }
-                else
-                {
-                    triggeredRight = false;
-                }
-            }
-
-            return false;
-        }
-
         //タップされているかどうかを調べる
         private void CollisionHaptic(VROverlayIntersectionResults_t results, LeftOrRight lr, ref bool tapped)
         {
@@ -1003,141 +924,5 @@ namespace EasyLazyLibrary
                 openvr.TriggerHapticPulse(Rightidx, 0, 3000);
             }
         }
-
-        //Canvas上の要素を特定してクリックする
-        private void UpdateCursor(bool isClicked,float x, float y,ref GameObject hoveredGameObject)
-        {
-            string Tag = "[" + this.GetType().Name + ":" +
-                         System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
-            // Debug.Log(Tag);
-            //クリック用uv座標を計算
-            var position = transform.position;
-            var rectTransform = LaycastRootObject.GetComponent<RectTransform>();
-            var sizeDelta = rectTransform.sizeDelta;
-            //Canvas上のレイキャストのために座標をセット
-            Vector2 ScreenPoint = new Vector2(x - sizeDelta.x / 2f + position.x, y - sizeDelta.y / 2f + position.y);
-            
-            var result = Raycast(LaycastRootObject.GetComponent<Canvas>(),eventCamera, new Ray((Vector3)ScreenPoint, Vector3.forward*100));
-            
-            // Debug.Log(x +","+ sizeDelta.x / 2f +","+ position.x+","+ y +","+ sizeDelta.y / 2f +","+ position.y);
-            // pos.transform.position = (Vector3)ScreenPoint;
-            PointerEventData pointer = new PointerEventData(EventSystem.current)
-            {
-                position = new Vector2(x,y)
-            };
-
-            //レイキャスト結果格納用リストを確保
-            // List<RaycastResult> result = new List<RaycastResult>();
-
-            //RaycastAllはレイキャスターを叩く。
-            //CanvasについていたりCameraについていたりするすべてのレイキャスターを叩く(要らないものは切っておくとよい)
-            // EventSystem.current.RaycastAll(pointer, result);
-            Debug.DrawRay((Vector3)ScreenPoint, Vector3.forward*100, Color.red, 10f);
-            // Debug.Log(result.Count);
-            //一番最初に見つけた要素にクリック処理を行う
-            for (int i = 0; i < result.Count; i++)
-            {
-                var res = result[i];
-                
-                // Debug.Log(Tag + res.name + " at " + res.transform.root.name + " "+ res.transform.IsChildOf(LaycastRootObject.transform) + res.transform.parent.name);
-                //対象にしたいルートオブジェクトの子かを調べる
-                var parent = res.transform.parent.gameObject;
-                if (res.transform.IsChildOf(LaycastRootObject.transform) && parent.GetComponent<UnityEngine.UI.Button>() != null)
-                {
-                    // Debug.Log(Tag + res.name + " at " + res.transform.root.name);
-                    if (hoveredGameObject.GetInstanceID() != parent.GetInstanceID())
-                    {
-                        
-                        if (hoveredGameObject != null)
-                        {
-                            ExecuteEvents.Execute(hoveredGameObject, pointer, ExecuteEvents.pointerExitHandler);
-                        }
-                        ExecuteEvents.Execute(parent, pointer, ExecuteEvents.pointerEnterHandler);
-                        hoveredGameObject = parent;
-                    }
-
-                    if (isClicked)
-                    {
-                        ExecuteEvents.Execute(parent, pointer, ExecuteEvents.pointerClickHandler);
-                    }
-
-                    return;
-                }
-            }
-
-            if (hoveredGameObject.GetInstanceID() == gameObject.GetInstanceID()) return;
-            ExecuteEvents.Execute(hoveredGameObject, pointer, ExecuteEvents.pointerExitHandler);
-            hoveredGameObject = gameObject;
-        }
-
-        private void HoverOut(ref GameObject hoveredGameObject)
-        {
-            
-            var pointer = new PointerEventData(EventSystem.current)
-            {
-                position = new Vector2(0,0)
-            };
-            if (hoveredGameObject.GetInstanceID() == gameObject.GetInstanceID()) return;
-            ExecuteEvents.Execute(hoveredGameObject, pointer, ExecuteEvents.pointerExitHandler);
-            hoveredGameObject = gameObject;
-        }
-        
-        private List<GameObject> Raycast(Canvas canvas, Camera eventCamera, Ray ray)
-        {
-            if (!canvas.enabled)
-            {
-                return null;
-            }
-
-            if (!canvas.gameObject.activeInHierarchy)
-            {
-                return null;
-            }
-
-            IList<Graphic> graphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
-            List<GameObject> result = new List<GameObject>();
-            for (int i = 0; i < graphics.Count; i++)
-            {
-                Graphic graphic = graphics[i];
-
-                if (graphic.depth == -1 || !graphic.raycastTarget)
-                {
-                    continue;
-                }
-
-                Transform graphicTransform = graphic.transform;
-                Vector3 graphicForward = graphicTransform.forward;
-
-                float dir = Vector3.Dot(graphicForward, ray.direction);
-
-                // Return immediately if direction is negative.
-                if (dir <= 0)
-                {
-                    continue;
-                }
-
-                float distance = Vector3.Dot(graphicForward, graphicTransform.position - ray.origin) / dir;
-
-                Vector3 position = ray.GetPoint(distance);
-                Vector2 pointerPosition = eventCamera.WorldToScreenPoint(position);
-                var rect = graphic.rectTransform;
-                // To continue if the graphic doesn't include the point.
-                if (!RectTransformUtility.RectangleContainsScreenPoint(rect, pointerPosition, eventCamera))
-                {
-                    continue;
-                }
-
-                // To continue if graphic raycast has failed.
-                if (!graphic.Raycast(pointerPosition, eventCamera))
-                {
-                    continue;
-                }
-                result.Add(graphic.gameObject);
-                //Debug.Log($"Raycast hit at {graphic.name}", graphic.gameObject);
-            }
-
-            return result;
-        }
-
     }
 }
