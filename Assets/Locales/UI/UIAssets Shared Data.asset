@@ -43,6 +43,14 @@ MonoBehaviour:
       1
     m_Metadata:
       m_Items: []
+  - m_Id: 23284789526528
+    m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/Text (TMP)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23284844052480
+    m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/Text (TMP) 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items:
     - rid: 5520768892402925604
@@ -72,6 +80,10 @@ MonoBehaviour:
           m_TableCodes:
           - ja
           - en
+        - m_KeyId: 23284789526528
+          m_TableCodes:
+          - ja
+          - en
         m_TypeString: TMPro.TMP_FontAsset, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
     - rid: 5520768892402925607
@@ -87,6 +99,10 @@ MonoBehaviour:
           - ja
           - en
         - m_KeyId: 1942153314304
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 23284844052480
           m_TableCodes:
           - ja
           - en

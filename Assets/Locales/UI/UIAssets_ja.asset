@@ -45,6 +45,15 @@ MonoBehaviour:
       Material]
     m_Metadata:
       m_Items: []
+  - m_Id: 23284789526528
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23284844052480
+    m_Localized: f357233ab64cfb34d909ff02543a7cd1[NotoSansJP-VariableFont_wght SDF
+      Material]
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -42,6 +42,14 @@ MonoBehaviour:
     m_Localized: 8f586378b4e144a9851e7b34d9b748ee[LiberationSans SDF Material]
     m_Metadata:
       m_Items: []
+  - m_Id: 23284789526528
+    m_Localized: 8f586378b4e144a9851e7b34d9b748ee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23284844052480
+    m_Localized: 8f586378b4e144a9851e7b34d9b748ee[LiberationSans SDF Material]
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

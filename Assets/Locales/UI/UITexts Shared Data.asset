@@ -32,6 +32,10 @@ MonoBehaviour:
     m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/Language/Text (TMP)
     m_Metadata:
       m_Items: []
+  - m_Id: 25466620329984
+    m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/Text (TMP)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
