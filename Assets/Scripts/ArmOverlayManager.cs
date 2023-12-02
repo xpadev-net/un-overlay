@@ -2,8 +2,7 @@ using System;
 using EasyLazyLibrary;
 using UnityEngine;
 
-public class ArmOverlayManager : MonoBehaviour
-{
+public class ArmOverlayManager : MonoBehaviour {
     private GameObject canvas;
     private RectTransform canvasRectTransform;
     private RenderTexture targetTexture;
@@ -12,20 +11,18 @@ public class ArmOverlayManager : MonoBehaviour
     private GameObject overlaySystem;
     private EasyOpenVROverlayForUnity easyOverlay;
     private string overlayId;
-    
+
     private int windowWidth;
     private int windowHeight;
     private bool initialized;
-    public static ArmOverlayManager Init()
-    {
+    public static ArmOverlayManager Init() {
         var prefab = Resources.Load<GameObject>("ArmOverlayManager");
         var manager = Instantiate(prefab).GetComponent<ArmOverlayManager>();
         return manager;
     }
 
-    private void Start()
-    {
-        overlayId = Const.overlayKeyPrefix+"."+Uuid.GetUuid();
+    private void Start() {
+        overlayId = Const.overlayKeyPrefix + "." + Uuid.GetUuid();
         initialized = false;
         canvas = transform.Find("Canvas").gameObject;
         canvasRectTransform = canvas.GetComponent<RectTransform>();
@@ -43,15 +40,14 @@ public class ArmOverlayManager : MonoBehaviour
         var fovDegrees = fovRadian * 180.0 / Math.PI;
         overlayCamera.fieldOfView = (float)fovDegrees;
         transform.position = new Vector3(WindowControl.instance.GetWindowLeft(windowWidth), 0, 0);
-
     }
 
     // Update is called once per frame
-    private void Update()
-    {
-        if (initialized) return;
+    private void Update() {
+        if (initialized)
+            return;
         initialized = true;
-        targetTexture = new RenderTexture(windowWidth,windowHeight,32);
+        targetTexture = new RenderTexture(windowWidth, windowHeight, 32);
         overlayCamera.targetTexture = targetTexture;
         easyOverlay.renderTexture = targetTexture;
         canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);

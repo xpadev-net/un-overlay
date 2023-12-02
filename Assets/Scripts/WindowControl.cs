@@ -1,20 +1,15 @@
 ﻿using UnityEngine;
 
-public class WindowControl : MonoBehaviour
-{
+public class WindowControl : MonoBehaviour {
     public static WindowControl instance;
 
     private bool isHoldingWindow = false;
     private int posLeft = 0;
-    private void Awake()
-    {
-        if( instance is null)
-        {
+    private void Awake() {
+        if (instance is null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
+        } else {
             Destroy(gameObject);
         }
 
@@ -22,24 +17,20 @@ public class WindowControl : MonoBehaviour
         isHoldingWindow = false;
     }
 
-    public bool TryToGrubWindow()
-    {
+    public bool TryToGrubWindow() {
         if (isHoldingWindow)
             return false;
         isHoldingWindow = true;
         return true;
     }
 
-    public void ReleaseWindow()
-    {
+    public void ReleaseWindow() {
         isHoldingWindow = false;
     }
 
-    public int GetWindowLeft(int width)
-    {
+    public int GetWindowLeft(int width) {
         var result = posLeft;
         posLeft += width + 50;
         return result + width / 2;
     }
 }
-
