@@ -8,32 +8,32 @@ using Valve.VR;
 public class UIControlManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject clockSystem;
+    private ArmOverlayManager armOverlayManager;
     [SerializeField]
     private EasyOpenVROverlayForUnity easyOpenVROverlay;
 
     [SerializeField] 
     private Canvas canvas;
 
-    private bool PresentOverlayPicker;
+    private bool presentOverlayPicker;
 
-    private void Update()
+    private void Start()
     {
-        PresentOverlayPicker = false;
+        presentOverlayPicker = false;
     }
 
     // Update is called once per frame
     //Canvas上の要素を特定してクリックする
     public void OnAddDesktopClick()
     {
-        Debug.Log("add desktop");
-        if (PresentOverlayPicker) return;
+        Debug.Log("[OnAddDesktopClick] add desktop "+presentOverlayPicker);
+        if (presentOverlayPicker) return;
         var picker = DesktopOverlayPickerManager.CreateInstance();
-        PresentOverlayPicker = true;
+        presentOverlayPicker = true;
         picker.deleteCallback = () =>
         {
-            Debug.Log("delete");
-            PresentOverlayPicker = false;
+            Debug.Log("[OnAddDesktopClick] delete");
+            presentOverlayPicker = false;
         };
     }
 
@@ -41,7 +41,7 @@ public class UIControlManager : MonoBehaviour
     {
         Debug.Log("reset");
         WindowControl.instance.Reset();
-        clockSystem.GetComponent<ArmOverlayManager>().RegisterWindow();
+        armOverlayManager.RegisterWindow();
     }
     
     public void OnSettingClick()

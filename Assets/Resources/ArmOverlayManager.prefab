@@ -1062,7 +1062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7a797cf60a4aaeb880c27fddba6783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clockSystem: {fileID: 6030179896260278405}
+  armOverlayManager: {fileID: 6030179896676231405}
   easyOpenVROverlay: {fileID: 6030179896260278426}
   canvas: {fileID: 6030179896823659868}
 --- !u!1 &9170923164224499709

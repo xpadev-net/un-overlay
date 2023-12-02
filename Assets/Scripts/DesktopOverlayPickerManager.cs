@@ -33,7 +33,6 @@ public class DesktopOverlayPickerManager : MonoBehaviour
         Debug.Log(" DesktopOverlayPickerManager Init Start with id:"+overlayId);
         easyOverlay.overlayKeyName = overlayId;
         easyOverlay.overlayFriendlyName = overlayId;
-        easyOverlay.deviceIndex = EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
         cameraAdjuster = pickerSystem.GetComponent<CameraAdjuster>();
         cameraAdjuster.UpdateCameraPov();
         var sizeDelta = canvasObj.GetComponent<RectTransform>().sizeDelta;
@@ -45,6 +44,12 @@ public class DesktopOverlayPickerManager : MonoBehaviour
         overlayCamera.targetTexture = targetTexture;
         easyOverlay.renderTexture = targetTexture;
         easyOverlay.Init();
+        
+        easyOverlay.deviceIndex =
+            Config.i.isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
+                : EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
+        easyOverlay.position = Config.i.isLeftHand ?new Vector3(-0.075f, -0.1f, -0.1f):new Vector3(0.05f, 0.5f, -0.1f);
+        easyOverlay.rotation = Config.i.isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
         initialized = true;
         Debug.Log(" DesktopOverlayPickerManager Init End with id:"+overlayId);
     }

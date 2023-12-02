@@ -190,7 +190,7 @@ MonoBehaviour:
   scale: {x: 1, y: 1, z: 1}
   mirrorX: 0
   mirrorY: 0
-  width: 1
+  width: 0.3
   alpha: 0.2
   show: 1
   sideBySide: 0

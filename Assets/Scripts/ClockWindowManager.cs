@@ -46,7 +46,6 @@ public class ClockWindowManager : MonoBehaviour {
         util.Init();
         leftCursorTextRectTransform = leftCursorText.GetComponent<RectTransform>();
         rightCursorTextRectTransform = rightCursorText.GetComponent<RectTransform>();
-        isLeftHand = false;
     }
 
     private void Update() {
@@ -79,8 +78,8 @@ public class ClockWindowManager : MonoBehaviour {
         // Canvasの幅・高さが一致する必要がある。
         var sizeDelta = canvasRectTransform.sizeDelta;
 
-        leftCursorText.SetActive(easyOpenVROverlay.leftHandU > -1f && !isLeftHand);
-        rightCursorText.SetActive(easyOpenVROverlay.rightHandU > -1f && isLeftHand);
+        leftCursorText.SetActive(easyOpenVROverlay.leftHandU > -1f && !Config.i.isLeftHand);
+        rightCursorText.SetActive(easyOpenVROverlay.rightHandU > -1f && Config.i.isLeftHand);
         leftCursorTextRectTransform.anchoredPosition =
             new Vector2(easyOpenVROverlay.leftHandU - sizeDelta.x / 2f,
                         easyOpenVROverlay.leftHandV - sizeDelta.y / 2f);
@@ -91,14 +90,14 @@ public class ClockWindowManager : MonoBehaviour {
 
     // コントローラによる画面移動モードにはいる
     private void HandleInput() {
-        if (easyOpenVROverlay.leftHandU > -1f && !isLeftHand) {
+        if (easyOpenVROverlay.leftHandU > -1f && !Config.i.isLeftHand) {
             // if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
             // EVRButtonId.k_EButton_Grip))
             // {
             // }
             return;
         }
-        if (easyOpenVROverlay.rightHandU > -1f && isLeftHand) {
+        if (easyOpenVROverlay.rightHandU > -1f && Config.i.isLeftHand) {
             // if (!isScreenMoving&&util.IsControllerButtonPressed(util.GetRightControllerIndex(),
             // EVRButtonId.k_EButton_Grip))
             // {
@@ -118,9 +117,9 @@ public class ClockWindowManager : MonoBehaviour {
 
         easyOpenVROverlay.deviceTracking = true;
         easyOpenVROverlay.deviceIndex =
-            isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
+            Config.i.isLeftHand ? EasyOpenVROverlayForUnity.TrackingDeviceSelect.LeftController
                        : EasyOpenVROverlayForUnity.TrackingDeviceSelect.RightController;
-        easyOpenVROverlay.position = isLeftHand ?new Vector3(-0.05f, 0, -0.1f):new Vector3(0.05f, 0, -0.1f);
-        easyOpenVROverlay.rotation = isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
+        easyOpenVROverlay.position = Config.i.isLeftHand ?new Vector3(-0.05f, 0, -0.1f):new Vector3(0.05f, 0, -0.1f);
+        easyOpenVROverlay.rotation = Config.i.isLeftHand ?new Vector3(190, 90,  0):new Vector3(190, 270,  0);
     }
 }
