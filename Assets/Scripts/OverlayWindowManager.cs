@@ -46,8 +46,11 @@ public class OverlayWindowManager : MonoBehaviour {
 
     private Vector3 screenOffsetTransform;
 
-    private void Start() {
-        // 姿勢取得ライブラリを初期化
+    private bool initialized;
+    
+    private void Start()
+    {
+        initialized = false;
     }
 
     public void Init()
@@ -57,11 +60,16 @@ public class OverlayWindowManager : MonoBehaviour {
         isHoldingWithLeft = false;
         leftCursorTextRectTransform = leftCursorText.GetComponent<RectTransform>();
         rightCursorTextRectTransform = rightCursorText.GetComponent<RectTransform>();
+        initialized = true;
     }
 
     private void Update() {
         // 姿勢取得ライブラリが初期化されていないとき初期化する
         //(OpenVRの初期化はeasyOpenVROverlayの方で行われるはずなので待機)
+        if (!initialized)
+        {
+            return;
+        }
         if (!util.IsReady()) {
             util.Init();
             return;

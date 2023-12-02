@@ -191,7 +191,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 0, g: 0.3719504, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -347,6 +347,7 @@ GameObject:
   - component: {fileID: 5029409758906071804}
   - component: {fileID: 6030179896260278424}
   - component: {fileID: 6030179896260278425}
+  - component: {fileID: 1632698984913802178}
   m_Layer: 0
   m_Name: ClockSystem
   m_TagString: Untagged
@@ -384,35 +385,36 @@ MonoBehaviour:
   error: 1
   eventLog: 0
   renderTexture: {fileID: 8400000, guid: 6d112916b41c17b449304b0bdbaec2af, type: 2}
-  Position: {x: 0, y: -0.5, z: 3}
-  Rotation: {x: 0, y: 0, z: 0}
-  Scale: {x: 1, y: 1, z: 1}
-  MirrorX: 0
-  MirrorY: 0
+  position: {x: 0, y: -0.5, z: 3}
+  rotation: {x: 0, y: 0, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  mirrorX: 0
+  mirrorY: 0
   width: 0.1
   alpha: 1
   show: 1
-  SideBySide: 0
-  OverlayFriendlyName: dev.xpa.test
-  OverlayKeyName: dev.xpa.test
-  DeviceTracking: 0
-  DeviceIndex: -99
-  Seated: 0
-  ResetSeatedCamera: 0
+  sideBySide: 0
+  overlayFriendlyName: SampleOverlay
+  overlayKeyName: SampleOverlay
+  deviceTracking: 1
+  deviceIndex: 0
+  seated: 0
+  resetSeatedCamera: 0
   putLogDevicesInfo: 0
-  ConnectedDevices: 0
-  SelectedDeviceIndex: 0
-  DeviceSerialNumber: 
-  DeviceRenderModelName: 
+  connectedDevices: 0
+  selectedDeviceIndex: 0
+  deviceSerialNumber: 
+  deviceRenderModelName: 
   laycastRootObject: {fileID: 6030179896823659864}
   tappedLeft: 0
   tappedRight: 0
-  LeftHandU: -1
-  LeftHandV: -1
-  LeftHandDistance: -1
-  RightHandU: -1
-  RightHandV: -1
-  RightHandDistance: -1
+  leftHandU: -1
+  leftHandV: -1
+  leftHandDistance: -1
+  rightHandU: -1
+  rightHandV: -1
+  rightHandDistance: -1
+  initialized: 0
   cursorManager: {fileID: 5029409758906071804}
 --- !u!114 &5029409758906071804
 MonoBehaviour:
@@ -458,6 +460,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 6030179897997134261}
+--- !u!114 &1632698984913802178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030179896260278405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1531a0142794413795f1a136814bb045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 6030179896823659864}
+  targetCamera: {fileID: 6030179896226721266}
 --- !u!1 &6030179896676231406
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,6 +522,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91798383cdec40f89c176a8976b2073e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 6030179896823659864}
+  overlayCameraObj: {fileID: 6030179896226721277}
+  overlaySystem: {fileID: 6030179896260278405}
 --- !u!1 &6030179896823659864
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,7 +703,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1052,6 +1071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7a797cf60a4aaeb880c27fddba6783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clockSystem: {fileID: 6030179896260278405}
   easyOpenVROverlay: {fileID: 6030179896260278426}
   canvas: {fileID: 6030179896823659868}
 --- !u!1 &9170923164224499709

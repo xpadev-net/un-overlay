@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1419635037705927962}
   - component: {fileID: 1419635037705927964}
   - component: {fileID: 5654894979555038426}
+  - component: {fileID: 7212858896868502874}
   m_Layer: 0
   m_Name: OverlaySystem
   m_TagString: Untagged
@@ -78,6 +79,7 @@ MonoBehaviour:
   rightHandU: -1
   rightHandV: -1
   rightHandDistance: -1
+  initialized: 0
   cursorManager: {fileID: 5654894979555038426}
 --- !u!114 &1419635037705927964
 MonoBehaviour:
@@ -111,6 +113,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasObj: {fileID: 1419635037939235760}
   eventCamera: {fileID: 1419635038909201071}
+--- !u!114 &7212858896868502874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419635037705927961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1531a0142794413795f1a136814bb045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1419635037939235760}
+  targetCamera: {fileID: 1419635038909201071}
 --- !u!1 &1419635037729006657
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +711,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419635038909201068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -975}
+  m_LocalPosition: {x: 0, y: 0, z: -1000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -727,7 +743,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 47.2026
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

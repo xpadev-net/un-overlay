@@ -162,6 +162,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6030179896226721266, guid: 250d8a40d2ef2434b88feb26ee19580d, type: 3}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030179896226721266, guid: 250d8a40d2ef2434b88feb26ee19580d, type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6030179896676231404, guid: 250d8a40d2ef2434b88feb26ee19580d, type: 3}
       propertyPath: m_RootOrder
       value: 2

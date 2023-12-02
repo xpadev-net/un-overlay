@@ -3,13 +3,14 @@ using EasyLazyLibrary;
 using UnityEngine;
 
 public class ArmOverlayManager : MonoBehaviour {
-    private GameObject canvas;
+    [SerializeField]private GameObject canvas;
     private RectTransform canvasRectTransform;
     private RenderTexture targetTexture;
-    private GameObject overlayCameraObj;
+    [SerializeField]private GameObject overlayCameraObj;
     private Camera overlayCamera;
-    private GameObject overlaySystem;
+    [SerializeField]private GameObject overlaySystem;
     private EasyOpenVROverlayForUnity easyOverlay;
+    private CameraManager cameraManager;
     private string overlayId;
 
     private int windowWidth;
@@ -24,22 +25,17 @@ public class ArmOverlayManager : MonoBehaviour {
     private void Start() {
         overlayId = Const.overlayKeyPrefix + "." + Uuid.GetUuid();
         initialized = false;
-        canvas = transform.Find("Canvas").gameObject;
         canvasRectTransform = canvas.GetComponent<RectTransform>();
-        overlayCameraObj = transform.Find("OverlayCamera").gameObject;
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
-        overlaySystem = transform.Find("ClockSystem").gameObject;
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
+        cameraManager = overlaySystem.GetComponent<CameraManager>();
         easyOverlay.overlayKeyName = overlayId;
         easyOverlay.overlayFriendlyName = overlayId;
-        easyOverlay.Init();
         var sizeDelta = canvasRectTransform.sizeDelta;
         windowWidth = (int)sizeDelta.x;
         windowHeight = (int)sizeDelta.y;
-        var fovRadian = Math.Atan2(windowHeight, Math.Abs(overlayCameraObj.transform.position.z));
-        var fovDegrees = fovRadian * 180.0 / Math.PI;
-        overlayCamera.fieldOfView = (float)fovDegrees;
         RegisterWindow();
+        easyOverlay.Init();
     }
 
     // Update is called once per frame
@@ -51,6 +47,7 @@ public class ArmOverlayManager : MonoBehaviour {
         overlayCamera.targetTexture = targetTexture;
         easyOverlay.renderTexture = targetTexture;
         canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
+        cameraManager.UpdateCameraPov();
     }
     
     public void RegisterWindow() {
