@@ -171,12 +171,12 @@ namespace EasyLazyLibrary
         private const float TapOffDistance = 0.043f;
 
         //カーソル位置表示用変数
-        public float LeftHandU = -1f;
-        public float LeftHandV = -1f;
-        public float LeftHandDistance = -1f;
-        public float RightHandU = -1f;
-        public float RightHandV = -1f;
-        public float RightHandDistance = -1f;
+        public float leftHandU = -1f;
+        public float leftHandV = -1f;
+        public float leftHandDistance = -1f;
+        public float rightHandU = -1f;
+        public float rightHandV = -1f;
+        public float rightHandDistance = -1f;
 
         //右手か左手か
         enum LeftOrRight
@@ -188,7 +188,7 @@ namespace EasyLazyLibrary
         //--------------------------------------------------------------------------
 
         //オーバーレイのハンドル(整数)
-        private ulong overlayHandle = INVALID_HANDLE;
+        private ulong overlayHandle = InvalidHandle;
 
         //OpenVRシステムインスタンス
         private CVRSystem openvr = null;
@@ -203,7 +203,7 @@ namespace EasyLazyLibrary
         private HmdMatrix34_t p;
 
         //無効なハンドル
-        private const ulong INVALID_HANDLE = 0;
+        private const ulong InvalidHandle = 0;
 
         private bool initialized = false;
         
@@ -213,25 +213,25 @@ namespace EasyLazyLibrary
         //--------------------------------------------------------------------------
 
         //外部から透明度設定切り替え
-        public void setAlpha(float a)
+        public void SetAlpha(float a)
         {
             alpha = a;
         }
 
         //外部からdevice切り替え
-        public void changeToHMD()
+        public void ChangeToHmd()
         {
             deviceIndex = TrackingDeviceSelect.HMD;
         }
 
         //外部からdevice切り替え
-        public void changeToLeftController()
+        public void ChangeToLeftController()
         {
             deviceIndex = TrackingDeviceSelect.LeftController;
         }
 
         //外部からdevice切り替え
-        public void changeToRightController()
+        public void ChangeToRightController()
         {
             deviceIndex = TrackingDeviceSelect.RightController;
         }
@@ -247,7 +247,7 @@ namespace EasyLazyLibrary
         //エラー状態かをチェック
         public bool IsError()
         {
-            return error || overlayHandle == INVALID_HANDLE || overlay == null || openvr == null;
+            return error || overlayHandle == InvalidHandle || overlay == null || openvr == null;
         }
 
         //エラー処理(開放処理)
@@ -261,12 +261,12 @@ namespace EasyLazyLibrary
             Debug.Log(currentMethod + "Begin");
 
             //ハンドルを解放
-            if (overlayHandle != INVALID_HANDLE && overlay != null)
+            if (overlayHandle != InvalidHandle && overlay != null)
             {
                 overlay.DestroyOverlay(overlayHandle);
             }
 
-            overlayHandle = INVALID_HANDLE;
+            overlayHandle = InvalidHandle;
             overlay = null;
             openvr = null;
             error = true;
@@ -758,8 +758,8 @@ namespace EasyLazyLibrary
             var allDevicePose = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             openvr.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0f, allDevicePose);
 
-            ProcessController(allDevicePose,true,ref LeftHandU,ref LeftHandV,ref LeftHandDistance);
-            ProcessController(allDevicePose,false,ref RightHandU,ref RightHandV,ref RightHandDistance);
+            ProcessController(allDevicePose,true,ref leftHandU,ref leftHandV,ref leftHandDistance);
+            ProcessController(allDevicePose,false,ref rightHandU,ref rightHandV,ref rightHandDistance);
         }
 
         private void ProcessController(TrackedDevicePose_t[] allDevicePose, bool isLeft,ref float u, ref float v, ref float distance)

@@ -85,14 +85,14 @@ public class OverlayWindowManager : MonoBehaviour {
         // Canvasの幅・高さが一致する必要がある。
         var sizeDelta = canvasRectTransform.sizeDelta;
 
-        leftCursorText.SetActive(easyOpenVROverlay.LeftHandU > -1f);
-        rightCursorText.SetActive(easyOpenVROverlay.RightHandU > -1f);
+        leftCursorText.SetActive(easyOpenVROverlay.leftHandU > -1f);
+        rightCursorText.SetActive(easyOpenVROverlay.rightHandU > -1f);
         leftCursorTextRectTransform.anchoredPosition =
-            new Vector2(easyOpenVROverlay.LeftHandU - sizeDelta.x / 2f,
-                        easyOpenVROverlay.LeftHandV - sizeDelta.y / 2f);
+            new Vector2(easyOpenVROverlay.leftHandU - sizeDelta.x / 2f,
+                        easyOpenVROverlay.leftHandV - sizeDelta.y / 2f);
         rightCursorTextRectTransform.anchoredPosition =
-            new Vector2(easyOpenVROverlay.RightHandU - sizeDelta.x / 2f,
-                        easyOpenVROverlay.RightHandV - sizeDelta.y / 2f);
+            new Vector2(easyOpenVROverlay.rightHandU - sizeDelta.x / 2f,
+                        easyOpenVROverlay.rightHandV - sizeDelta.y / 2f);
     }
 
     private void MoveScreen() {
@@ -128,7 +128,7 @@ public class OverlayWindowManager : MonoBehaviour {
 
     // コントローラによる画面移動モードにはいる
     private void HandleInput() {
-        if (easyOpenVROverlay.LeftHandU > -1f) {
+        if (easyOpenVROverlay.leftHandU > -1f) {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
                                                EVRButtonId.k_EButton_Grip) &&
@@ -141,7 +141,7 @@ public class OverlayWindowManager : MonoBehaviour {
                 return;
             }
         }
-        if (easyOpenVROverlay.RightHandU > -1f) {
+        if (easyOpenVROverlay.rightHandU > -1f) {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetRightControllerIndex(),
                                                EVRButtonId.k_EButton_Grip) &&
