@@ -18,7 +18,8 @@ public class UIControlManager : MonoBehaviour
     //Canvas上の要素を特定してクリックする
     public void OnAddDesktopClick()
     {
-        DesktopOverlayManager.Init(0);
+        Debug.Log("add desktop");
+        DesktopOverlayPickerManager.CreateInstance();
     }
 
     public void OnResetClick()

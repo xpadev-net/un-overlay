@@ -10,13 +10,13 @@ public class ArmOverlayManager : MonoBehaviour {
     private Camera overlayCamera;
     [SerializeField]private GameObject overlaySystem;
     private EasyOpenVROverlayForUnity easyOverlay;
-    private CameraManager cameraManager;
+    private CameraAdjuster cameraAdjuster;
     private string overlayId;
 
     private int windowWidth;
     private int windowHeight;
     private bool initialized;
-    public static ArmOverlayManager Init() {
+    public static ArmOverlayManager CreateInstance() {
         var prefab = Resources.Load<GameObject>("ArmOverlayManager");
         var manager = Instantiate(prefab).GetComponent<ArmOverlayManager>();
         return manager;
@@ -28,7 +28,7 @@ public class ArmOverlayManager : MonoBehaviour {
         canvasRectTransform = canvas.GetComponent<RectTransform>();
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
-        cameraManager = overlaySystem.GetComponent<CameraManager>();
+        cameraAdjuster = overlaySystem.GetComponent<CameraAdjuster>();
         easyOverlay.overlayKeyName = overlayId;
         easyOverlay.overlayFriendlyName = overlayId;
         var sizeDelta = canvasRectTransform.sizeDelta;
@@ -47,7 +47,7 @@ public class ArmOverlayManager : MonoBehaviour {
         overlayCamera.targetTexture = targetTexture;
         easyOverlay.renderTexture = targetTexture;
         canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
-        cameraManager.UpdateCameraPov();
+        cameraAdjuster.UpdateCameraPov();
     }
     
     public void RegisterWindow() {

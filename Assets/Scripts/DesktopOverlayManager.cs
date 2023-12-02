@@ -17,12 +17,12 @@ public class DesktopOverlayManager : MonoBehaviour {
     public EasyOpenVROverlayForUnity easyOverlay;
     public string overlayId;
     private OverlayWindowManager windowManager;
-    private CameraManager cameraManager;
+    private CameraAdjuster cameraAdjuster;
 
     private int windowWidth;
     private int windowHeight;
     private bool initialized;
-    public static DesktopOverlayManager Init(int desktopIndex ) {
+    public static DesktopOverlayManager CreateInstance(int desktopIndex ) {
         var prefab = Resources.Load<GameObject>("DesktopOverlayManager");
         var manager = Instantiate(prefab).GetComponent<DesktopOverlayManager>();
         manager.desktopIndex = desktopIndex;
@@ -40,7 +40,7 @@ public class DesktopOverlayManager : MonoBehaviour {
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
         windowManager = overlaySystem.GetComponent<OverlayWindowManager>();
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
-        cameraManager = overlaySystem.GetComponent<CameraManager>();
+        cameraAdjuster = overlaySystem.GetComponent<CameraAdjuster>();
         easyOverlay.overlayKeyName = overlayId;
         easyOverlay.overlayFriendlyName = overlayId;
         Debug.Log("Desktop Overlay Manager Init Complete");
@@ -68,7 +68,7 @@ public class DesktopOverlayManager : MonoBehaviour {
                 new Vector3(WindowControl.instance.RegisterWindow(this,windowWidth), 0, 0);
             easyOverlay.Init();
             windowManager.Init();
-            cameraManager.UpdateCameraPov();
+            cameraAdjuster.UpdateCameraPov();
         }
 
         if (windowTexture.desktopIndex != desktopIndex) {

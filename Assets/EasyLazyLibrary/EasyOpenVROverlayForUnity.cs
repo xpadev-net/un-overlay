@@ -311,6 +311,7 @@ namespace EasyLazyLibrary
         private void Start()
         {
             initialized = false;
+            Debug.Log( "Easy OpenVR Overlay For Unity start "+transform.GetInstanceID());
         }
 
         public void Init()
@@ -391,7 +392,7 @@ namespace EasyLazyLibrary
 
             if (!initialized)
             {
-                Debug.Log(currentMethod+" nor initialized"+transform.GetInstanceID());
+                 Debug.Log(currentMethod+" nor initialized"+transform.GetInstanceID());
                 return;
             }
             //エラーが発生した場合や、ハンドルが無効な場合は実行しない

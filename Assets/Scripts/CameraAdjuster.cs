@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class CameraManager : MonoBehaviour
+public class CameraAdjuster : MonoBehaviour
 {
     [SerializeField] private GameObject canvas;
     [SerializeField] private Camera targetCamera;

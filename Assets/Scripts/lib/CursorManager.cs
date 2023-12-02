@@ -109,6 +109,7 @@ public class CursorManager : MonoBehaviour
 
             if (isClicked)
             {
+                Debug.Log(res.name+" is clicked " + parent.name);
                 ExecuteEvents.Execute(parent, pointer, ExecuteEvents.pointerClickHandler);
             }
 
