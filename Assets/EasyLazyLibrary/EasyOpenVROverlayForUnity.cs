@@ -112,15 +112,15 @@ namespace EasyLazyLibrary
 
         //追従対象デバイス。HMD=0
         //public uint DeviceIndex = OpenVR.k_unTrackedDeviceIndex_Hmd;
-        public TrackingDeviceSelect DeviceIndex = TrackingDeviceSelect.HMD;
-        private int DeviceIndexOld = (int)TrackingDeviceSelect.None;
+        public TrackingDeviceSelect deviceIndex = TrackingDeviceSelect.HMD;
+        private int deviceIndexOld = (int)TrackingDeviceSelect.None;
 
         [Header("Absolute space")]
         //(絶対空間の場合)ルームスケールか、着座状態か
-        public bool Seated = false;
+        public bool seated = false;
 
         //着座カメラのリセット(リセット後自動でfalseに戻ります)
-        public bool ResetSeatedCamera = false;
+        public bool resetSeatedCamera = false;
 
         //追従対象リスト。コントロラーは変動するので特別処理
         public enum TrackingDeviceSelect
@@ -146,21 +146,21 @@ namespace EasyLazyLibrary
         public bool putLogDevicesInfo = false;
 
         //(デバイスを選択した時点で)現在接続されているデバイス数
-        public int ConnectedDevices = 0;
+        public int connectedDevices = 0;
 
         //選択デバイス番号
-        public int SelectedDeviceIndex = 0;
+        public int selectedDeviceIndex = 0;
 
         //選択デバイスのシリアル番号
-        public string DeviceSerialNumber = null;
+        public string deviceSerialNumber = null;
 
         //選択デバイスのモデル名
-        public string DeviceRenderModelName = null;
+        public string deviceRenderModelName = null;
 
 
         [Header("GUI Tap")]
         //レイキャスト対象識別用ルートCanvasオブジェクト
-        [FormerlySerializedAs("LaycastRootObject")] public GameObject laycastRootObject = null;
+        public GameObject laycastRootObject = null;
 
         //タップ状態管理
         public bool tappedLeft = false;
@@ -221,19 +221,19 @@ namespace EasyLazyLibrary
         //外部からdevice切り替え
         public void changeToHMD()
         {
-            DeviceIndex = TrackingDeviceSelect.HMD;
+            deviceIndex = TrackingDeviceSelect.HMD;
         }
 
         //外部からdevice切り替え
         public void changeToLeftController()
         {
-            DeviceIndex = TrackingDeviceSelect.LeftController;
+            deviceIndex = TrackingDeviceSelect.LeftController;
         }
 
         //外部からdevice切り替え
         public void changeToRightController()
         {
-            DeviceIndex = TrackingDeviceSelect.RightController;
+            deviceIndex = TrackingDeviceSelect.RightController;
         }
 
         //--------------------------------------------------------------------------
@@ -488,7 +488,7 @@ namespace EasyLazyLibrary
             {
                 //deviceindexを処理(コントローラーなどはその時その時で変わるため)
                 var idx = OpenVR.k_unTrackedDeviceIndex_Hmd;
-                switch (DeviceIndex)
+                switch (deviceIndex)
                 {
                     case TrackingDeviceSelect.LeftController:
                         idx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
@@ -497,16 +497,16 @@ namespace EasyLazyLibrary
                         idx = openvr.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
                         break;
                     default:
-                        idx = (uint)DeviceIndex;
+                        idx = (uint)deviceIndex;
                         break;
                 }
 
                 //device情報に変化があったらInspectorに反映
-                if (DeviceIndexOld != (int)idx)
+                if (deviceIndexOld != (int)idx)
                 {
                     Debug.Log(currentMethod + "Device Updated");
                     UpdateDeviceInfo(idx);
-                    DeviceIndexOld = (int)idx;
+                    deviceIndexOld = (int)idx;
                 }
 
                 //HMDからの相対的な位置にオーバーレイを表示する。
@@ -515,7 +515,7 @@ namespace EasyLazyLibrary
             else
             {
                 //空間の絶対位置にオーバーレイを表示する
-                if (!Seated)
+                if (!seated)
                 {
                     overlay.SetOverlayTransformAbsolute(overlayHandle, ETrackingUniverseOrigin.TrackingUniverseStanding,
                         ref p);
@@ -527,10 +527,10 @@ namespace EasyLazyLibrary
                 }
             }
 
-            if (ResetSeatedCamera)
+            if (resetSeatedCamera)
             {
                 //OpenVR.System.ResetSeatedZeroPose();
-                ResetSeatedCamera = false;
+                resetSeatedCamera = false;
             }
 
             //オーバーレイの大きさ設定(幅のみ。高さはテクスチャの比から自動計算される)
@@ -717,19 +717,19 @@ namespace EasyLazyLibrary
             openvr.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0f, allDevicePose);
 
             //接続されているdeviceの数をカウントする
-            ConnectedDevices = 0;
+            connectedDevices = 0;
             for (uint i = 0; i < OpenVR.k_unMaxTrackedDeviceCount; i++)
             {
                 if (allDevicePose[i].bDeviceIsConnected)
                 {
-                    ConnectedDevices++;
+                    connectedDevices++;
                 }
             }
 
             //deviceの情報をInspectorに反映する
-            SelectedDeviceIndex = (int)idx;
-            DeviceSerialNumber = GetProperty(idx, ETrackedDeviceProperty.Prop_SerialNumber_String);
-            DeviceRenderModelName = GetProperty(idx, ETrackedDeviceProperty.Prop_RenderModelName_String);
+            selectedDeviceIndex = (int)idx;
+            deviceSerialNumber = GetProperty(idx, ETrackedDeviceProperty.Prop_SerialNumber_String);
+            deviceRenderModelName = GetProperty(idx, ETrackedDeviceProperty.Prop_RenderModelName_String);
         }
 
         //device情報を取得する

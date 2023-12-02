@@ -404,20 +404,15 @@ MonoBehaviour:
   SelectedDeviceIndex: 0
   DeviceSerialNumber: 
   DeviceRenderModelName: 
-  LaycastRootObject: {fileID: 6030179896823659864}
+  laycastRootObject: {fileID: 6030179896823659864}
   tappedLeft: 0
   tappedRight: 0
-  triggeredLeft: 0
-  triggeredRight: 0
-  TapOnDistance: 0.04
-  TapOffDistance: 0.043
   LeftHandU: -1
   LeftHandV: -1
   LeftHandDistance: -1
   RightHandU: -1
   RightHandV: -1
   RightHandDistance: -1
-  eventCamera: {fileID: 6030179896226721266}
   cursorManager: {fileID: 5029409758906071804}
 --- !u!114 &5029409758906071804
 MonoBehaviour:
