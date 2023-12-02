@@ -21,7 +21,7 @@ using Valve.VR;
 
 public class OverlayWindowManager : MonoBehaviour {
     [SerializeField]
-    private EasyOpenVROverlayForUnity easyOpenVROverlay; // オーバーレイ表示用ライブラリ
+    public EasyOpenVROverlayForUnity easyOpenVROverlay; // オーバーレイ表示用ライブラリ
     [SerializeField]
     private GameObject leftCursorText; // 左手カーソル表示用Text
 
@@ -46,8 +46,11 @@ public class OverlayWindowManager : MonoBehaviour {
 
     private Vector3 screenOffsetTransform;
 
+    public string id;
+
     private void Start() {
         // 姿勢取得ライブラリを初期化
+        id = Uuid.GetUuid();
         util.Init();
         leftCursorTextRectTransform = leftCursorText.GetComponent<RectTransform>();
         rightCursorTextRectTransform = rightCursorText.GetComponent<RectTransform>();
@@ -132,7 +135,7 @@ public class OverlayWindowManager : MonoBehaviour {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
                                                EVRButtonId.k_EButton_Grip) &&
-                WindowControl.instance.TryToGrubWindow()) {
+                WindowControl.instance.TryToGrubWindow(this,true)) {
                 isScreenMoving = true;
                 screenMoveWithRight = false;
 
@@ -145,7 +148,7 @@ public class OverlayWindowManager : MonoBehaviour {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetRightControllerIndex(),
                                                EVRButtonId.k_EButton_Grip) &&
-                WindowControl.instance.TryToGrubWindow()) {
+                WindowControl.instance.TryToGrubWindow(this,false)) {
                 isScreenMoving = true;
                 screenMoveWithRight = true;
                 var cpos = util.GetRightControllerTransform();
@@ -178,5 +181,10 @@ public class OverlayWindowManager : MonoBehaviour {
         easyOpenVROverlay.rotation =
             (new Vector3(-pos.rotation.eulerAngles.x, -pos.rotation.eulerAngles.y, 0)) +
             overlayRotation;
+    }
+
+    public int GetWindowIndex(int windowWidth)
+    {
+        return WindowControl.instance.RegisterWindow(this, windowWidth);
     }
 }

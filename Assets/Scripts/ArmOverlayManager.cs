@@ -39,7 +39,7 @@ public class ArmOverlayManager : MonoBehaviour {
         var fovRadian = Math.Atan2(windowHeight, Math.Abs(overlayCameraObj.transform.position.z));
         var fovDegrees = fovRadian * 180.0 / Math.PI;
         overlayCamera.fieldOfView = (float)fovDegrees;
-        transform.position = new Vector3(WindowControl.instance.GetWindowLeft(windowWidth), 0, 0);
+        transform.position = new Vector3(WindowControl.instance.RegisterWindow(null,windowWidth), 0, 0);
     }
 
     // Update is called once per frame

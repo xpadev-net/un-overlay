@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class WindowControl : MonoBehaviour {
     public static WindowControl instance;
-
-    private bool isHoldingWindow = false;
-    private int posLeft = 0;
+    
+    private List<OverlayWindowManager> managers;
+    private bool isHoldingWindow;
+    private int posLeft;
     private void Awake() {
         if (instance is null) {
             instance = this;
@@ -15,11 +17,23 @@ public class WindowControl : MonoBehaviour {
 
         posLeft = 0;
         isHoldingWindow = false;
+        managers = new List<OverlayWindowManager>();
     }
 
-    public bool TryToGrubWindow() {
-        if (isHoldingWindow)
-            return false;
+    public int RegisterWindow(OverlayWindowManager self,int width)
+    {
+        if (self)
+        {
+            managers.Add(self);            
+        }
+        var result = posLeft;
+        posLeft += width + 50;
+        return result + width / 2;
+    }
+
+    public bool TryToGrubWindow(OverlayWindowManager self,bool isLeft) {
+        if (isHoldingWindow) return false;
+        if (self.id != GetFrontWindowName(isLeft)) return false;
         isHoldingWindow = true;
         return true;
     }
@@ -27,10 +41,19 @@ public class WindowControl : MonoBehaviour {
     public void ReleaseWindow() {
         isHoldingWindow = false;
     }
-
-    public int GetWindowLeft(int width) {
-        var result = posLeft;
-        posLeft += width + 50;
-        return result + width / 2;
+    
+    private string GetFrontWindowName(bool isLeft) {
+        var shortestDistance = float.MaxValue;
+        var managerId = "";
+        foreach (var manager in managers)
+        {
+            var distance = isLeft
+                ? manager.easyOpenVROverlay.leftHandDistance
+                : manager.easyOpenVROverlay.rightHandDistance;
+            if (distance >= shortestDistance || distance < 0) continue;
+            shortestDistance = distance;
+            managerId = manager.id;
+        }
+        return managerId;
     }
 }

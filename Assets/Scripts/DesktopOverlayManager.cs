@@ -1,4 +1,5 @@
 using EasyLazyLibrary;
+using Unity.VisualScripting;
 using UnityEngine;
 using uWindowCapture;
 
@@ -15,6 +16,7 @@ public class DesktopOverlayManager : MonoBehaviour {
     private GameObject overlaySystem;
     private EasyOpenVROverlayForUnity easyOverlay;
     private string overlayId;
+    private OverlayWindowManager windowManager;
 
     private int windowWidth;
     private int windowHeight;
@@ -37,6 +39,7 @@ public class DesktopOverlayManager : MonoBehaviour {
         overlayCameraObj = transform.Find("OverlayCamera").gameObject;
         overlayCamera = overlayCameraObj.GetComponent<Camera>();
         overlaySystem = transform.Find("OverlaySystem").gameObject;
+        windowManager = overlaySystem.GetComponent<OverlayWindowManager>();
         easyOverlay = overlaySystem.GetComponent<EasyOpenVROverlayForUnity>();
         easyOverlay.overlayKeyName = overlayId;
         easyOverlay.overlayFriendlyName = overlayId;
@@ -62,7 +65,7 @@ public class DesktopOverlayManager : MonoBehaviour {
             canvasRectTransform.sizeDelta = new Vector2(windowWidth, windowHeight);
             windowTexture.desktopIndex = desktopIndex;
             transform.position =
-                new Vector3(WindowControl.instance.GetWindowLeft(windowWidth), 0, 0);
+                new Vector3(windowManager.GetWindowIndex(windowWidth), 0, 0);
         }
 
         if (windowTexture.desktopIndex != desktopIndex) {
