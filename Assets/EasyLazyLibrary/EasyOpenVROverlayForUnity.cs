@@ -51,6 +51,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Valve.VR;
 using Button = UnityEngine.UIElements.Button; //Steam VR
@@ -211,8 +212,9 @@ namespace EasyLazyLibrary
         
         private readonly EasyOpenVRUtil util = new EasyOpenVRUtil(); // 姿勢取得ライブラリ
 
-        [SerializeField] public GameObject pos;
-        [SerializeField] public Camera camera;
+        [FormerlySerializedAs("Camera")] [SerializeField] public Camera eventCamera;
+        private GameObject leftHoveredObject;
+        private GameObject rightHoveredObject;
 
         //--------------------------------------------------------------------------
 
@@ -320,6 +322,7 @@ namespace EasyLazyLibrary
         private void Start()
         {
             initialized = false;
+            leftHoveredObject = rightHoveredObject= gameObject;
         }
 
         public void Init()
@@ -814,13 +817,14 @@ namespace EasyLazyLibrary
                 LeftHandV = renderTexture.height - results.vUVs.v1 * renderTexture.height;
                 LeftHandDistance = results.fDistance;
 
-                if (IsTriggered(true))
-                {
-                    uGUIclick(LeftHandU,LeftHandV);
-                }
+                UpdateCursor(IsTriggered(true),LeftHandU,LeftHandV,ref leftHoveredObject);
             }
             else
             {
+                if (LeftHandDistance > -1f)
+                {
+                    HoverOut(ref leftHoveredObject);                    
+                }
                 LeftHandU = -1f;
                 LeftHandV = -1f;
                 LeftHandDistance = -1f;
@@ -837,13 +841,14 @@ namespace EasyLazyLibrary
                 RightHandU = results.vUVs.v0 * renderTexture.width;
                 RightHandV = renderTexture.height - results.vUVs.v1 * renderTexture.height;
                 RightHandDistance = results.fDistance;
-                if (IsTriggered(false))
-                {
-                    uGUIclick(RightHandU,RightHandV);
-                }
+                UpdateCursor(IsTriggered(false),RightHandU,RightHandV, ref rightHoveredObject);
             }
             else
             {
+                if (RightHandDistance > -1f)
+                {
+                    HoverOut(ref rightHoveredObject);
+                }
                 RightHandU = -1f;
                 RightHandV = -1f;
                 RightHandDistance = -1f;
@@ -923,7 +928,7 @@ namespace EasyLazyLibrary
                 {
                     if (!triggeredLeft)
                     {
-                        //triggeredLeft = true;
+                        triggeredLeft = true;
                         return true;
                     }
                 }
@@ -938,7 +943,7 @@ namespace EasyLazyLibrary
                 {
                     if (!triggeredRight)
                     {
-                        //triggeredRight = true;
+                        triggeredRight = true;
                         return true;
                     }
                 }
@@ -1000,7 +1005,7 @@ namespace EasyLazyLibrary
         }
 
         //Canvas上の要素を特定してクリックする
-        private void uGUIclick(float x, float y)
+        private void UpdateCursor(bool isClicked,float x, float y,ref GameObject hoveredGameObject)
         {
             string Tag = "[" + this.GetType().Name + ":" +
                          System.Reflection.MethodBase.GetCurrentMethod(); //クラス名とメソッド名を自動取得
@@ -1012,52 +1017,81 @@ namespace EasyLazyLibrary
             //Canvas上のレイキャストのために座標をセット
             Vector2 ScreenPoint = new Vector2(x - sizeDelta.x / 2f + position.x, y - sizeDelta.y / 2f + position.y);
             
-            Raycast(LaycastRootObject.GetComponent<Canvas>(),camera, new Ray((Vector3)ScreenPoint, Vector3.forward*100));
+            var result = Raycast(LaycastRootObject.GetComponent<Canvas>(),eventCamera, new Ray((Vector3)ScreenPoint, Vector3.forward*100));
             
-            Debug.Log(x +","+ sizeDelta.x / 2f +","+ position.x+","+ y +","+ sizeDelta.y / 2f +","+ position.y);
-            pos.transform.position = (Vector3)ScreenPoint;
+            // Debug.Log(x +","+ sizeDelta.x / 2f +","+ position.x+","+ y +","+ sizeDelta.y / 2f +","+ position.y);
+            // pos.transform.position = (Vector3)ScreenPoint;
             PointerEventData pointer = new PointerEventData(EventSystem.current)
             {
-                position = ScreenPoint
+                position = new Vector2(x,y)
             };
 
             //レイキャスト結果格納用リストを確保
-            List<RaycastResult> result = new List<RaycastResult>();
+            // List<RaycastResult> result = new List<RaycastResult>();
 
             //RaycastAllはレイキャスターを叩く。
             //CanvasについていたりCameraについていたりするすべてのレイキャスターを叩く(要らないものは切っておくとよい)
-            EventSystem.current.RaycastAll(pointer, result);
+            // EventSystem.current.RaycastAll(pointer, result);
             Debug.DrawRay((Vector3)ScreenPoint, Vector3.forward*100, Color.red, 10f);
-            Debug.Log(result.Count);
+            // Debug.Log(result.Count);
             //一番最初に見つけた要素にクリック処理を行う
             for (int i = 0; i < result.Count; i++)
             {
                 var res = result[i];
                 
-                Debug.Log(Tag + res.gameObject.name + " at " + res.gameObject.transform.root.name + " :"+res.isValid);
-                //一番最初に引っ掛けたものを叩く(target以外はcheckを外しておく)
-                if (res.isValid)
+                // Debug.Log(Tag + res.name + " at " + res.transform.root.name + " "+ res.transform.IsChildOf(LaycastRootObject.transform) + res.transform.parent.name);
+                //対象にしたいルートオブジェクトの子かを調べる
+                var parent = res.transform.parent.gameObject;
+                if (res.transform.IsChildOf(LaycastRootObject.transform) && parent.GetComponent<UnityEngine.UI.Button>() != null)
                 {
-                    //対象にしたいルートオブジェクトの子かを調べる
-                    if (res.gameObject.transform.root.name == LaycastRootObject.name && res.gameObject.GetComponentInParent<Button>() != null)
+                    // Debug.Log(Tag + res.name + " at " + res.transform.root.name);
+                    if (hoveredGameObject.GetInstanceID() != parent.GetInstanceID())
                     {
-                        ExecuteEvents.Execute(res.gameObject, pointer, ExecuteEvents.pointerClickHandler);
-                        break;
+                        
+                        if (hoveredGameObject != null)
+                        {
+                            ExecuteEvents.Execute(hoveredGameObject, pointer, ExecuteEvents.pointerExitHandler);
+                        }
+                        ExecuteEvents.Execute(parent, pointer, ExecuteEvents.pointerEnterHandler);
+                        hoveredGameObject = parent;
                     }
+
+                    if (isClicked)
+                    {
+                        ExecuteEvents.Execute(parent, pointer, ExecuteEvents.pointerClickHandler);
+                    }
+
+                    return;
                 }
             }
+
+            if (hoveredGameObject.GetInstanceID() == gameObject.GetInstanceID()) return;
+            ExecuteEvents.Execute(hoveredGameObject, pointer, ExecuteEvents.pointerExitHandler);
+            hoveredGameObject = gameObject;
         }
 
-        private void Raycast(Canvas canvas, Camera eventCamera, Ray ray)
+        private void HoverOut(ref GameObject hoveredGameObject)
+        {
+            
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                position = new Vector2(0,0)
+            };
+            if (hoveredGameObject.GetInstanceID() == gameObject.GetInstanceID()) return;
+            ExecuteEvents.Execute(hoveredGameObject, pointer, ExecuteEvents.pointerExitHandler);
+            hoveredGameObject = gameObject;
+        }
+        
+        private List<GameObject> Raycast(Canvas canvas, Camera eventCamera, Ray ray)
         {
             if (!canvas.enabled)
             {
-                return;
+                return null;
             }
 
             if (!canvas.gameObject.activeInHierarchy)
             {
-                return;
+                return null;
             }
 
             IList<Graphic> graphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
@@ -1086,9 +1120,9 @@ namespace EasyLazyLibrary
 
                 Vector3 position = ray.GetPoint(distance);
                 Vector2 pointerPosition = eventCamera.WorldToScreenPoint(position);
-
+                var rect = graphic.rectTransform;
                 // To continue if the graphic doesn't include the point.
-                if (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, pointerPosition, eventCamera))
+                if (!RectTransformUtility.RectangleContainsScreenPoint(rect, pointerPosition, eventCamera))
                 {
                     continue;
                 }
@@ -1099,8 +1133,10 @@ namespace EasyLazyLibrary
                     continue;
                 }
                 result.Add(graphic.gameObject);
-                Debug.Log($"Raycast hit at {graphic.name}", graphic.gameObject);
+                //Debug.Log($"Raycast hit at {graphic.name}", graphic.gameObject);
             }
+
+            return result;
         }
 
     }
