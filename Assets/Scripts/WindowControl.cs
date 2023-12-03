@@ -36,6 +36,7 @@ public class WindowControl : MonoBehaviour {
         posLeft = 0;
         isHoldingWindow = false;
         managers = new List<WindowItem>();
+        Debug.Log("***WindowControl Initialized!");
     }
 
     public int RegisterWindow(Nullable<WindowItem> item,int width)
@@ -73,6 +74,7 @@ public class WindowControl : MonoBehaviour {
     public void Reset()
     {
         Debug.Log("[WindowControl]reset!" +managers.Count);
+        Debug.Log("***WindowControl reset!");
         foreach (var manager in managers)
         {
             manager.onClose();
@@ -95,5 +97,17 @@ public class WindowControl : MonoBehaviour {
             managerId = manager.overlayId;
         }
         return managerId;
+    }
+    
+    public bool IsRegistered(string overlayId)
+    {
+        foreach (var manager in managers)
+        {
+            if (manager.overlayId == overlayId)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

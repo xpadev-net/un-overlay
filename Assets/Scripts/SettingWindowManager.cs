@@ -63,6 +63,9 @@ public class SettingWindowManager : BaseWindowManager {
     {
         Debug.Log("SettingOverlayManager CloseWindow");
         deleteCallback?.Invoke();
-        Destroy(gameObject);
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
     }
 }

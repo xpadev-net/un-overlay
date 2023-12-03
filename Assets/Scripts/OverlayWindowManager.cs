@@ -144,8 +144,12 @@ public class OverlayWindowManager : MonoBehaviour {
         if (easyOpenVROverlay.leftHandU > -1f) {
             if (!isScreenMoving &&
                 util.IsControllerButtonPressed(util.GetLeftControllerIndex(),
-                                               EVRButtonId.k_EButton_Grip) &&
-                WindowControl.instance.TryToGrubWindow(easyOpenVROverlay.overlayKeyName,true)) {
+                                               EVRButtonId.k_EButton_Grip)) {
+                if (!WindowControl.instance.TryToGrubWindow(easyOpenVROverlay.overlayKeyName,true))
+                {
+                    Debug.Log(WindowControl.instance.IsRegistered(easyOpenVROverlay.overlayKeyName));
+                    return;
+                }
                 isScreenMoving = true;
                 isHoldingWithLeft = true;
 
