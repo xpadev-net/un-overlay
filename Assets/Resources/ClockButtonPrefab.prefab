@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 77031555983582063}
   - component: {fileID: 1291764069725865881}
   m_Layer: 5
-  m_Name: ButtonPrefab
+  m_Name: ClockButtonPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

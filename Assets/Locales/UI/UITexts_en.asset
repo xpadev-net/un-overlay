@@ -38,6 +38,22 @@ MonoBehaviour:
     m_Localized: Settings
     m_Metadata:
       m_Items: []
+  - m_Id: 149042727993344
+    m_Localized: Left Hand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149178086572032
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149253030395904
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149642303750144
+    m_Localized: Exit application?
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

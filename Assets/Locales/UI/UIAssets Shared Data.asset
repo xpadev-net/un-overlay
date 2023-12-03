@@ -51,6 +51,42 @@ MonoBehaviour:
     m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/Text (TMP) 1
     m_Metadata:
       m_Items: []
+  - m_Id: 146874205716480
+    m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/AnchorHand/buttons/AnchorHandLeft/text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146874264436736
+    m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/AnchorHand/buttons/AnchorHandLeft/text
+      1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146997207875584
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/buttons/Yes/text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146997258207232
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/buttons/Yes/text
+      1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147081777627136
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/buttons/Cancel/text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147081819570176
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/buttons/Cancel/text
+      1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147456605798400
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/Text (TMP)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147456614187008
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/Text (TMP)
+      1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items:
     - rid: 5520768892402925604
@@ -84,6 +120,22 @@ MonoBehaviour:
           m_TableCodes:
           - ja
           - en
+        - m_KeyId: 146874205716480
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 146997207875584
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 147081777627136
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 147456605798400
+          m_TableCodes:
+          - ja
+          - en
         m_TypeString: TMPro.TMP_FontAsset, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
     - rid: 5520768892402925607
@@ -103,6 +155,22 @@ MonoBehaviour:
           - ja
           - en
         - m_KeyId: 23284844052480
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 146874264436736
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 146997258207232
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 147081819570176
+          m_TableCodes:
+          - ja
+          - en
+        - m_KeyId: 147456614187008
           m_TableCodes:
           - ja
           - en

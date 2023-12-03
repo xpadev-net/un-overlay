@@ -36,6 +36,22 @@ MonoBehaviour:
     m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/Text (TMP)
     m_Metadata:
       m_Items: []
+  - m_Id: 149042727993344
+    m_Key: SettingOverlayManager/SettingOverlayManager/Canvas/UI/AnchorHand/buttons/AnchorHandLeft/text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149178086572032
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/buttons/Yes/text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149253030395904
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/buttons/Cancel/text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149642303750144
+    m_Key: ArmOverlayManager/ArmOverlayManager/Canvas/ShutdownConfirmUI/Text (TMP)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

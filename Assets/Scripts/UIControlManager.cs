@@ -17,11 +17,29 @@ public class UIControlManager : MonoBehaviour
 
     private bool presentOverlayPicker;
     private bool presentSettingWindow;
+    
+    [SerializeField]
+    private GameObject mainWindow;
+    [SerializeField]
+    private GameObject shutdownConfirmWindow;
+
+    private bool initialized;
 
     private void Start()
     {
         presentOverlayPicker = false;
         presentSettingWindow = false;
+        initialized = false;
+    }
+
+    private void Update()
+    {
+        if (!initialized)
+        {
+            shutdownConfirmWindow.SetActive(false);
+            mainWindow.SetActive(true);
+            initialized = true;
+        }
     }
 
     // Update is called once per frame
@@ -57,5 +75,23 @@ public class UIControlManager : MonoBehaviour
             Debug.Log("[OnSettingClick] delete");
             presentSettingWindow = false;
         };
+    }
+
+    public void OnShutdownClick()
+    {
+        Debug.Log("[OnShutdownClick] delete");
+        shutdownConfirmWindow.SetActive(true);
+        mainWindow.SetActive(false);
+    }
+    public void OnShutdownConfirmClick()
+    {
+        Debug.Log("[OnShutdownConfirmClick] delete");
+        Application.Quit();
+    }
+    public void OnShutdownCancelClick()
+    {
+        Debug.Log("[OnShutdownCancelClick] delete");
+        shutdownConfirmWindow.SetActive(false);
+        mainWindow.SetActive(true);
     }
 }
