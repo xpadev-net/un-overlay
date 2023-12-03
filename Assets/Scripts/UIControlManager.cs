@@ -34,7 +34,7 @@ public class UIControlManager : MonoBehaviour
 
     private void Update()
     {
-        if (!initialized)
+        if (!initialized && shutdownConfirmWindow)
         {
             shutdownConfirmWindow.SetActive(false);
             mainWindow.SetActive(true);
@@ -79,18 +79,22 @@ public class UIControlManager : MonoBehaviour
 
     public void OnShutdownClick()
     {
-        Debug.Log("[OnShutdownClick] delete");
+        Debug.Log("[OnShutdownClick]");
         shutdownConfirmWindow.SetActive(true);
         mainWindow.SetActive(false);
     }
     public void OnShutdownConfirmClick()
     {
-        Debug.Log("[OnShutdownConfirmClick] delete");
+        Debug.Log("[OnShutdownConfirmClick]");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
     public void OnShutdownCancelClick()
     {
-        Debug.Log("[OnShutdownCancelClick] delete");
+        Debug.Log("[OnShutdownCancelClick]");
         shutdownConfirmWindow.SetActive(false);
         mainWindow.SetActive(true);
     }
