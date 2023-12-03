@@ -80,6 +80,9 @@ public class DesktopOverlayManager : BaseWindowManager {
     
     public new void Remove()
     {   
-        Destroy(gameObject);
+        if (gameObject != null)
+        {  
+            Destroy(gameObject);
+        }
     }
 }

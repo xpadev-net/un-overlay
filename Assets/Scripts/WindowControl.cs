@@ -52,8 +52,16 @@ public class WindowControl : MonoBehaviour {
     }
 
     public bool TryToGrubWindow(string selfId,bool isLeft) {
-        if (isHoldingWindow) return false;
-        if (selfId != GetFrontWindowName(isLeft)) return false;
+        if (isHoldingWindow)
+        {
+            Debug.Log("already holding!");
+            return false;
+        }
+        if (selfId != GetFrontWindowName(isLeft))
+        {
+            Debug.Log("id not match!");
+            return false;
+        }
         isHoldingWindow = true;
         return true;
     }
